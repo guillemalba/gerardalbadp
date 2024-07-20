@@ -106,7 +106,6 @@
   
   .video-list {
     display: flex;
-    overflow-x: scroll;
     margin-top: 20px;
   }
   
