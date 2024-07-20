@@ -4,16 +4,26 @@
     <div>
       <VideoPreview
         title="Music Videos"
-        thumbnail="path/to/your/image.jpg"
-        :videoSrc="videos[0].src"
-        :relatedVideos="videos"
+        :videoSrc="musicVideos[0].src"
+        :relatedVideos="musicVideos"
         @play-video="handlePlayVideo"
       />
       <VideoPreview
-        title="Comercials"
-        thumbnail="path/to/your/image.jpg"
-        :videoSrc="videos[1].src"
-        :relatedVideos="videos"
+        title="Commercials"
+        :videoSrc="commercialVideos[0].src"
+        :relatedVideos="commercialVideos"
+        @play-video="handlePlayVideo"
+      />
+      <VideoPreview
+        title="Underwater"
+        :videoSrc="underwaterVideos[0].src"
+        :relatedVideos="underwaterVideos"
+        @play-video="handlePlayVideo"
+      />
+      <VideoPreview
+        title="Films"
+        :videoSrc="filmVideos[0].src"
+        :relatedVideos="filmVideos"
         @play-video="handlePlayVideo"
       />
     </div>
@@ -35,10 +45,24 @@ export default {
   },
   data() {
     return {
-      videos: [
+      musicVideos: [
         { id: 1, src: 'https://vimeo.com/522564568' },
         { id: 2, src: 'https://vimeo.com/522377522' },
         { id: 3, src: 'https://vimeo.com/491834523' }
+      ],
+      commercialVideos: [
+        { id: 1, src: 'https://vimeo.com/290744844' },
+        { id: 2, src: 'https://vimeo.com/199707225' },
+        { id: 3, src: 'https://vimeo.com/189584267' },
+        { id: 4, src: 'https://vimeo.com/522549222' }
+      ],
+      underwaterVideos: [
+        { id: 1, src: 'https://vimeo.com/522377522' },
+        { id: 2, src: 'https://vimeo.com/522549222' },
+        { id: 3, src: 'https://vimeo.com/522726870' }
+      ],
+      filmVideos: [
+        { id: 1, src: 'https://vimeo.com/522726870' }
       ]
     };
   },
@@ -53,10 +77,9 @@ export default {
 
 <style scoped>
 .home-page {
+  position: relative;
   display: flex;
   background-color: rgb(189, 22, 22);
-  width: 100vw;
-  height: 100vh;
   overflow: hidden;
 }
 </style>
