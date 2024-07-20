@@ -2,8 +2,8 @@
     <div class="video-preview" :style="{ backgroundImage: `url(${thumbnail})` }">
       <div class="overlay">
         <h1>{{ title }}</h1>
-        <button @click="playVideo">Reproducir Video</button>
-        <button @click="toggleVideoList">Todos los videos</button>
+        <CustomButton @click="playVideo">Reproducir</CustomButton>
+        <CustomButton @click="toggleVideoList">Mas videos</CustomButton>
       </div>
       <div v-if="showVideoList" class="video-list">
         <div v-for="video in relatedVideos" :key="video.id" class="video-item">
@@ -19,53 +19,63 @@
   </template>
   
   <script>
-  export default {
+    import CustomButton from './CustomButton.vue';
+
+    export default {
     name: 'VideoPreview',
+    components: {
+        CustomButton
+    },
     props: {
-      title: {
+        title: {
         type: String,
         required: true
-      },
-      videoSrc: {
+        },
+        videoSrc: {
         type: String,
         required: true
-      },
-      relatedVideos: {
+        },
+        relatedVideos: {
         type: Array,
         required: true
-      }
+        }
     },
     data() {
-      return {
+        return {
         thumbnail: '',
         showVideoList: false
-      };
+        };
     },
     created() {
-      this.fetchThumbnail(this.videoSrc);
+        this.fetchThumbnail(this.videoSrc);
     },
     methods: {
-      getEmbedUrl(src) {
+        getEmbedUrl(src) {
         const videoId = src.split('/').pop();
         return `https://player.vimeo.com/video/${videoId}`;
-      },
-      async fetchThumbnail(videoUrl) {
+        },
+        async fetchThumbnail(videoUrl) {
         const videoId = videoUrl.split('/').pop();
         const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
         const data = await response.json();
         this.thumbnail = data[0].thumbnail_large;
-      },
-      playVideo() {
+        },
+        playVideo() {
         this.$emit('play-video', this.videoSrc);
-      },
-      toggleVideoList() {
+        },
+        toggleVideoList() {
         this.showVideoList = !this.showVideoList;
-      }
+        }
     }
-  };
-  </script>
+    };
+</script>
+
   
   <style scoped>
+  h1 {
+    font-size: 34px;
+  }
+
   .video-preview {
     position: relative;
     width: 100vw;
@@ -92,16 +102,6 @@
     text-align: center;
     color: white;
     padding: 20px;
-  }
-  
-  button {
-    margin: 10px 0;
-    padding: 10px 20px;
-    background-color: white;
-    border: none;
-    cursor: pointer;
-    width: 200px;
-    display: block;
   }
   
   .video-list {

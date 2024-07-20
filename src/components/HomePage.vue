@@ -3,25 +3,25 @@
     <LeftSidebar />
     <div>
       <VideoPreview
-        title="Music Videos"
+        title="MUSIC VIDEOS"
         :videoSrc="musicVideos[0].src"
         :relatedVideos="musicVideos"
         @play-video="handlePlayVideo"
       />
       <VideoPreview
-        title="Commercials"
+        title="COMMERCIALS"
         :videoSrc="commercialVideos[0].src"
         :relatedVideos="commercialVideos"
         @play-video="handlePlayVideo"
       />
       <VideoPreview
-        title="Underwater"
+        title="UNDERWATER"
         :videoSrc="underwaterVideos[0].src"
         :relatedVideos="underwaterVideos"
         @play-video="handlePlayVideo"
       />
       <VideoPreview
-        title="Films"
+        title="FILMS"
         :videoSrc="filmVideos[0].src"
         :relatedVideos="filmVideos"
         @play-video="handlePlayVideo"
