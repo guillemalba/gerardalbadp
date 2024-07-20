@@ -16,7 +16,7 @@ export default {
 <style scoped>
 .left-sidebar {
   width: 20px; /* Ajusta el ancho según tus necesidades */
-  background-color: #0000004a;
+  background-color: #0000002c;
   display: flex;
   align-items: center;
   justify-content: center;

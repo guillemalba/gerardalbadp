@@ -16,72 +16,73 @@
           Más videos
         </button>
       </div>
-      <div v-if="showVideoList" class="video-list">
-        <div v-for="video in relatedVideos" :key="video.id" class="video-item">
-          <iframe
-            :src="getEmbedUrl(video.src)"
-            frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen
-          ></iframe>
+      <transition name="slide-fade">
+        <div v-if="showVideoList" class="video-list">
+          <div v-for="video in relatedVideos" :key="video.id" class="video-item">
+            <iframe
+              :src="getEmbedUrl(video.src)"
+              frameborder="0"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
         </div>
-      </div>
+      </transition>
     </div>
   </template>
   
-<script>
-    export default {
-        name: 'VideoPreview',
-        props: {
-            title: {
-                type: String,
-                required: true
-            },
-            videoSrc: {
-                type: String,
-                required: true
-            },
-            relatedVideos: {
-                type: Array,
-                required: true
-            }
-        },
-        data() {
-            return {
-                thumbnail: '',
-                showVideoList: false
-            };
-        },
-        created() {
-            this.fetchThumbnail(this.videoSrc);
-        },
-        methods: {
-            getEmbedUrl(src) {
-                const videoId = src.split('/').pop();
-                return `https://player.vimeo.com/video/${videoId}`;
-            },
-            async fetchThumbnail(videoUrl) {
-                const videoId = videoUrl.split('/').pop();
-                const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
-                const data = await response.json();
-                this.thumbnail = data[0].thumbnail_large;
-            },
-            playVideo() {
-                this.$emit('play-video', this.videoSrc);
-            },
-            toggleVideoList() {
-                this.showVideoList = !this.showVideoList;
-            }
-        }
-    };
-</script>
-
+  <script>
+  export default {
+    name: 'VideoPreview',
+    props: {
+      title: {
+        type: String,
+        required: true
+      },
+      videoSrc: {
+        type: String,
+        required: true
+      },
+      relatedVideos: {
+        type: Array,
+        required: true
+      }
+    },
+    data() {
+      return {
+        thumbnail: '',
+        showVideoList: false
+      };
+    },
+    created() {
+      this.fetchThumbnail(this.videoSrc);
+    },
+    methods: {
+      getEmbedUrl(src) {
+        const videoId = src.split('/').pop();
+        return `https://player.vimeo.com/video/${videoId}`;
+      },
+      async fetchThumbnail(videoUrl) {
+        const videoId = videoUrl.split('/').pop();
+        const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
+        const data = await response.json();
+        this.thumbnail = data[0].thumbnail_large;
+      },
+      playVideo() {
+        this.$emit('play-video', this.videoSrc);
+      },
+      toggleVideoList() {
+        this.showVideoList = !this.showVideoList;
+      }
+    }
+  };
+  </script>
   
   <style scoped>
   h1 {
     font-size: 34px;
   }
-
+  
   .video-preview {
     position: relative;
     width: 100vw;
@@ -108,11 +109,18 @@
     text-align: center;
     color: white;
     padding: 20px;
+    z-index: 1; /* Asegura que el contenido principal esté encima */
   }
   
   .video-list {
     display: flex;
     margin-top: 20px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo semi-transparente para contraste */
+    z-index: 0; /* Asegura que la lista esté debajo del contenido principal */
   }
   
   .video-item {
@@ -126,8 +134,7 @@
     height: 200px;
     border: none;
   }
-
-
+  
   .custom-button {
     margin: 10px 0;
     padding: 12px 24px;
@@ -141,6 +148,8 @@
     transition: all 0.3s ease;
     width: 200px;
     display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     text-transform: uppercase;
   }
@@ -162,4 +171,14 @@
     outline: none;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
   }
+  
+  /* Animación de deslizamiento */
+  .slide-fade-enter-active, .slide-fade-leave-active {
+    transition: all 0.5s ease;
+  }
+  .slide-fade-enter, .slide-fade-leave-to {
+    transform: translateY(10px);
+    opacity: 0;
+  }
   </style>
+  
