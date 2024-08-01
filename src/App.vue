@@ -11,9 +11,9 @@ export default {
 </script>
 
 <style>
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
 }
 
 #app {
@@ -34,8 +34,18 @@ body {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.main-content {
-  flex: 1;
-  padding: 20px;
+@font-face {
+  font-family: 'Baskerville Old Face';
+  src: url('@/assets/fonts/baskerville-old-face.ttf') format('truetype'); /* Ajusta la ruta y el formato según tu archivo */
 }
+
+body button {
+  font-family: 'Baskerville Old Face', serif;
+}
+
+.font-baskerville {
+  font-family: 'Baskerville Old Face', serif;
+}
+
+
 </style>

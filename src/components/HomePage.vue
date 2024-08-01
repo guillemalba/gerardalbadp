@@ -55,9 +55,9 @@ export default {
         { id: 2, src: 'https://vimeo.com/199707225' },
         { id: 3, src: 'https://vimeo.com/189584267' },
         { id: 4, src: 'https://vimeo.com/522549222' },
-        { id: 5, src: 'https://vimeo.com/522549222' },
+        { id: 5, src: 'https://vimeo.com/189584267' },
         { id: 6, src: 'https://vimeo.com/522549222' },
-        { id: 7, src: 'https://vimeo.com/522549222' }
+        { id: 7, src: 'https://vimeo.com/189584267' }
       ],
       underwaterVideos: [
         { id: 1, src: 'https://vimeo.com/522377522' },
@@ -82,7 +82,7 @@ export default {
 .home-page {
   position: relative;
   display: flex;
-  background-color: rgb(189, 22, 22);
+  background-color: rgb(0, 0, 0);
   overflow: hidden;
 }
 </style>
