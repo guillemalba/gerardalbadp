@@ -22,9 +22,18 @@
       <div v-if="showVideoList" class="video-list-container">
         <div v-if="canScrollLeft" class="arrow left-arrow" @click="scrollLeft">&#9664;</div>
         <div class="video-list" ref="videoList">
-          <div v-for="video in relatedVideos" :key="video.id" class="video-item">
-            <iframe :src="getEmbedUrl(video.src)" frameborder="0" allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen></iframe>
+          <div v-for="video in relatedVideos" :key="video.id" class="video-item" :style="{ backgroundImage: `url(${video.thumbnail})` }">
+            <div class="hover-overlay">
+              <div class="video-info">
+                <p>{{ video.title }} / {{ video.duration }}</p>
+              </div>
+              <button @click="handlePlayRelatedVideo(video.src)" class="play-button">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
         <div v-if="canScrollRight" class="arrow right-arrow" @click="scrollRight">&#9654;</div>
@@ -60,6 +69,7 @@ export default {
   },
   created() {
     this.fetchThumbnail(this.videoSrc);
+    this.fetchThumbnailsForRelatedVideos();
   },
   mounted() {
     this.$nextTick(this.checkScroll);
@@ -78,6 +88,16 @@ export default {
       const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
       const data = await response.json();
       this.thumbnail = data[0].thumbnail_large;
+    },
+    async fetchThumbnailsForRelatedVideos() {
+      for (const video of this.relatedVideos) {
+        const videoId = video.src.split('/').pop();
+        const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
+        const data = await response.json();
+        video.thumbnail = data[0].thumbnail_large;
+        video.title = data[0].title; // Assuming the API provides the title
+        video.duration = this.formatDuration(data[0].duration); // Convert duration to mm:ss format
+      }
     },
     playVideo() {
       this.$emit('play-video', this.videoSrc);
@@ -106,6 +126,14 @@ export default {
         this.canScrollLeft = container.scrollLeft > 0;
         this.canScrollRight = container.scrollWidth > container.clientWidth + container.scrollLeft;
       }
+    },
+    formatDuration(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    },
+    handlePlayRelatedVideo(src) {
+      this.$emit('play-video', src);
     }
   }
 };
@@ -175,16 +203,57 @@ h1 {
 }
 
 .video-item {
+  position: relative;
   width: 300px;
+  height: 200px;
   flex-shrink: 0;
   /* Evita que los videos se encojan */
-  background-color: rgb(0, 0, 0);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-iframe {
+.hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 200px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-item:hover .hover-overlay {
+  opacity: 1;
+}
+
+.play-button {
+  position: relative;
+  top: 10%; /* Subir el botón */
+  transform: translate(0%, -60%);
+  background-color: rgba(0, 0, 0, 0);
   border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+}
+
+.play-button .icon {
+  width: 25px;
+  height: 25px;
+}
+
+.video-info {
+  color: white;
+  text-align: center;
+  margin-top: 10px;
 }
 
 .arrow {

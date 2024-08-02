@@ -16,14 +16,13 @@ export default {
 <style scoped>
 .left-sidebar {
   width: 20px; /* Ajusta el ancho según tus necesidades */
-  background-color: #0000002c;
+  background-color: #00000000;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh; /* Asegura que la barra ocupe toda la altura de la pantalla */
   position: fixed; /* Fija la barra en su lugar */
   left: 0; /* Alinea la barra a la izquierda */
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   z-index: 1000; /* Asegura que la barra esté encima de otros contenidos */
 }
 
