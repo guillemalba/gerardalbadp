@@ -25,6 +25,9 @@ export default {
   height: 100vh; /* Asegura que la barra ocupe toda la altura de la pantalla */
   position: fixed; /* Fija la barra en su lugar */
   right: 0; /* Alinea la barra a la derecha */
+  z-index: 1000;
+  border: none; /* Elimina cualquier borde */
+  box-shadow: none; /* Elimina cualquier sombra */
 }
 
 .vertical-text {
@@ -39,7 +42,7 @@ export default {
 }
 
 .vertical-text h2 {
-  margin-bottom: 100px; /* Ajusta el valor para cambiar el espacio entre los elementos */
+  margin-bottom: 170px; /* Ajusta el valor para cambiar el espacio entre los elementos */
   writing-mode: vertical-rl; /* Rotar el texto para alinear verticalmente */
 }
 </style>

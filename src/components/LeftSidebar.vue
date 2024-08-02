@@ -24,6 +24,8 @@ export default {
   position: fixed; /* Fija la barra en su lugar */
   left: 0; /* Alinea la barra a la izquierda */
   z-index: 1000; /* Asegura que la barra esté encima de otros contenidos */
+  border: none; /* Elimina cualquier borde */
+  box-shadow: none; /* Elimina cualquier sombra */
 }
 
 .vertical-text {

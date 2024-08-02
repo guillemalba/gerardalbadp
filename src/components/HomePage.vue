@@ -2,6 +2,7 @@
   <div class="home-page">
     <LeftSidebar />
     <div>
+      <BackgroundVideo videoSrc="https://vimeo.com/522837592" />
       <VideoPreview
         title="MUSIC VIDEOS"
         :videoSrc="musicVideos[0].src"
@@ -35,6 +36,7 @@
 import LeftSidebar from './LeftSidebar.vue';
 import RightSidebar from './RightSidebar.vue';
 import VideoPreview from './VideoPreview.vue';
+import BackgroundVideo from './BackgroundVideo.vue';
 
 export default {
   name: 'HomePage',
@@ -42,6 +44,7 @@ export default {
     LeftSidebar,
     RightSidebar,
     VideoPreview,
+    BackgroundVideo,
   },
   data() {
     return {
