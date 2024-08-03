@@ -1,18 +1,22 @@
 <template>
-    <div class="video-player">
-      <div class="video-container">
-        <div class="iframe-wrapper">
-          <iframe :src="embedUrl" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
-          
+    <div class="video-player-page">
+      <div class="video-content">
+        <div class="video-container" ref="videoContainer">
+          <iframe
+            :src="videoEmbedUrl"
+            frameborder="0"
+            allow="autoplay; fullscreen"
+            allowfullscreen
+            @load="updateHeights"
+          ></iframe>
         </div>
-      </div>
-      <div class="video-info">
-        <h1>{{ videoInfo.title }}</h1>
-        <p>{{ videoInfo.description }}</p>
-        <div class="credits">
-          <h2>Credits</h2>
+        <div class="video-details" ref="videoDetails">
+          <h1>{{ videoTitle }}</h1>
+          <p>{{ videoDescription }}</p>
           <ul>
-            <li v-for="credit in videoInfo.credits" :key="credit">{{ credit }}</li>
+            <li><strong>Director:</strong> {{ videoDirector }}</li>
+            <li><strong>Producer:</strong> {{ videoProducer }}</li>
+            <li><strong>Duration:</strong> {{ videoDuration }}</li>
           </ul>
         </div>
       </div>
@@ -22,77 +26,91 @@
   <script>
   export default {
     name: 'VideoPlayer',
-    props: {
-      videoSrc: {
-        type: String,
-        required: true
-      }
-    },
     data() {
       return {
-        videoInfo: {
-          title: '',
-          description: '',
-          credits: []
-        }
+        videoTitle: '',
+        videoDescription: '',
+        videoDirector: '',
+        videoProducer: '',
+        videoDuration: '',
       };
     },
     computed: {
-      embedUrl() {
-        if (this.videoSrc) {
-          const videoId = this.videoSrc.split('/').pop();
-          return `https://player.vimeo.com/video/${videoId}`;
-        }
-        return '';
-      }
+      videoEmbedUrl() {
+        const videoId = this.$route.query.videoSrc.split('/').pop();
+        return `https://player.vimeo.com/video/${videoId}`;
+      },
     },
     created() {
-      if (this.videoSrc) {
-        this.fetchVideoInfo(this.videoSrc);
-      }
+      this.fetchVideoDetails();
+    },
+    mounted() {
+      window.addEventListener('resize', this.updateHeights);
+      this.updateHeights();
+    },
+    beforeUnmount() {
+      window.removeEventListener('resize', this.updateHeights);
     },
     methods: {
-      async fetchVideoInfo(videoUrl) {
-        const videoId = videoUrl.split('/').pop();
+      async fetchVideoDetails() {
+        const videoId = this.$route.query.videoSrc.split('/').pop();
         const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
         const data = await response.json();
-        this.videoInfo.title = data[0].title;
-        this.videoInfo.description = data[0].description;
-        this.videoInfo.credits = data[0].credits || ['No credits available'];
-      }
-    }
+        const videoData = data[0];
+        this.videoTitle = videoData.title;
+        this.videoDescription = videoData.description;
+        this.videoDirector = videoData.user_name; // Assuming the user name is the director
+        this.videoProducer = videoData.user_name; // Assuming the user name is the producer
+        this.videoDuration = this.formatDuration(videoData.duration);
+      },
+      formatDuration(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+      },
+      updateHeights() {
+        const videoContainer = this.$refs.videoContainer;
+        const videoDetails = this.$refs.videoDetails;
+        if (videoContainer && videoDetails) {
+          videoDetails.style.height = `${videoContainer.clientHeight}px`;
+        }
+      },
+    },
   };
   </script>
   
   <style scoped>
-  .video-player {
+  .video-player-page {
     display: flex;
-    gap: 20px;
-    padding: 20px;
-    background-color: #b30000;
-    color: #fff;
+    flex-direction: column;
     height: 100vh;
+    background-color: #000;
+    color: #fff;
+    align-items: center;
+  }
+  
+  .video-content {
+    margin-top: 50px;
+
+    display: flex;
+    width: 100%;
+    max-width: 92%; /* Limit the maximum width */
+    align-items: center;
+    justify-content: space-between; /* Space between the video and details */
+    padding: 20px;
     box-sizing: border-box;
   }
   
-  .iframe-wrapper {
+  .video-container {
+    flex: 0 0 70%; /* Take 70% of the parent width */
     position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
-  }
-
-  .credits-wrapper {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
+    background-color: rgba(0, 0, 0, 0.8);
   }
   
-  .video-container {
-    flex: 2;
-    display: flex;
-    justify-content: center;
+  .video-container::after {
+    content: "";
+    display: block;
+    padding-bottom: 56.25%; /* Maintain 16:9 aspect ratio */
   }
   
   .video-container iframe {
@@ -101,45 +119,40 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #ffffff;
+    border: none;
   }
   
-  .video-info {
-    flex: 1;
-    background-color: #1e1e1e;
-    border-radius: 10px;
+  .video-details {
+    flex: 0 0 30%; /* Take the remaining 30% of the parent width */
+    background-color: rgba(27, 27, 27, 0.8);
     padding: 20px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    overflow-y: auto;
-
-    height: 400px;
   }
   
-  .video-info h1 {
+  .video-details h1 {
     font-size: 24px;
     margin-bottom: 10px;
   }
   
-  .video-info p {
-    font-size: 16px;
+  .video-details p {
     margin-bottom: 20px;
   }
   
-  .credits h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-  
-  .credits ul {
-    list-style-type: none;
+  .video-details ul {
+    list-style: none;
     padding: 0;
   }
   
-  .credits li {
-    font-size: 14px;
-    margin-bottom: 5px;
+  .video-details li {
+    margin-bottom: 10px;
+  }
+  
+  .video-details strong {
+    color: #ccc;
   }
   </style>
   
