@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from './components/HomePage.vue';
+import VideoPlayer from './components/VideoPlayer.vue'; // Importa el nuevo componente
 
 const routes = [
   {
@@ -7,7 +8,12 @@ const routes = [
     name: 'Home',
     component: HomePage,
   },
-  // Puedes agregar más rutas aquí
+  {
+    path: '/video-player', // Nueva ruta
+    name: 'VideoPlayer',
+    component: VideoPlayer,
+    props: route => ({ videoSrc: route.query.videoSrc }) // Pasar videoSrc como prop
+  }
 ];
 
 const router = createRouter({

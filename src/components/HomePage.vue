@@ -29,6 +29,7 @@
       />
     </div>
     <RightSidebar />
+    <FooterPage/>
   </div>
 </template>
 
@@ -37,6 +38,7 @@ import LeftSidebar from './LeftSidebar.vue';
 import RightSidebar from './RightSidebar.vue';
 import VideoPreview from './VideoPreview.vue';
 import BackgroundVideo from './BackgroundVideo.vue';
+import FooterPage from './FooterPage.vue';
 
 export default {
   name: 'HomePage',
@@ -45,6 +47,7 @@ export default {
     RightSidebar,
     VideoPreview,
     BackgroundVideo,
+    FooterPage // Registra el componente Footer
   },
   data() {
     return {
@@ -74,8 +77,7 @@ export default {
   },
   methods: {
     handlePlayVideo(src) {
-      // Lógica para reproducir el video en detalle
-      console.log(`Reproduciendo video: ${src}`);
+      this.$router.push({ name: 'VideoPlayer', query: { videoSrc: src } });
     }
   }
 };
@@ -85,7 +87,12 @@ export default {
 .home-page {
   position: relative;
   display: flex;
+  flex-direction: column; /* Asegura que el footer esté al final */
   background-color: rgb(0, 0, 0);
   overflow: hidden;
+}
+
+.home-page > div {
+  flex: 1; /* Asegura que el contenido principal ocupe el espacio disponible */
 }
 </style>
