@@ -1,23 +1,40 @@
 <template>
     <div class="video-player-page">
+      <h1>{{ sectionTitle }}</h1> <!-- Título de la sección -->
       <div class="video-content">
-        <div class="video-container" ref="videoContainer">
-          <iframe
-            :src="videoEmbedUrl"
-            frameborder="0"
-            allow="autoplay; fullscreen"
-            allowfullscreen
-            @load="updateHeights"
-          ></iframe>
+        <div 
+          class="arrow-container left-arrow-container" 
+          :class="{ invisible: currentVideoIndex === 0 }" 
+          @click="playPreviousVideo"
+        >
+          <span class="arrow">&#9664;</span>
         </div>
-        <div class="video-details" ref="videoDetails">
-          <h1>{{ videoTitle }}</h1>
-          <p>{{ videoDescription }}</p>
-          <ul>
-            <li><strong>Director:</strong> {{ videoDirector }}</li>
-            <li><strong>Producer:</strong> {{ videoProducer }}</li>
-            <li><strong>Duration:</strong> {{ videoDuration }}</li>
-          </ul>
+        <div class="video-and-details">
+          <div class="video-container" ref="videoContainer">
+            <iframe
+              :src="videoEmbedUrl"
+              frameborder="0"
+              allow="autoplay; fullscreen"
+              allowfullscreen
+              @load="updateHeights"
+            ></iframe>
+          </div>
+          <div class="video-details" ref="videoDetails">
+            <h1>{{ videoTitle }}</h1>
+            <p>{{ videoDescription }}</p>
+            <ul>
+              <li><strong>Director:</strong> {{ videoDirector }}</li>
+              <li><strong>Producer:</strong> {{ videoProducer }}</li>
+              <li><strong>Duration:</strong> {{ videoDuration }}</li>
+            </ul>
+          </div>
+        </div>
+        <div 
+          class="arrow-container right-arrow-container" 
+          :class="{ invisible: currentVideoIndex === relatedVideos.length - 1 }" 
+          @click="playNextVideo"
+        >
+          <span class="arrow">&#9654;</span>
         </div>
       </div>
       <div class="related-videos">
@@ -26,7 +43,7 @@
           <div v-if="canScrollLeft" class="arrow left-arrow" @click="scrollLeft">&#9664;</div>
           <div class="video-list" ref="videoList">
             <div
-              v-for="video in relatedVideos"
+              v-for="(video, index) in relatedVideos"
               :key="video.id"
               class="video-item"
               :style="{ backgroundImage: `url(${video.thumbnail})` }"
@@ -35,7 +52,7 @@
                 <div class="video-info">
                   <p>{{ video.title }} / {{ video.duration }}</p>
                 </div>
-                <button @click="handlePlayRelatedVideo(video.src)" class="play-button">
+                <button @click="handlePlayRelatedVideo(video.src, index)" class="play-button">
                   <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
                   </svg>
@@ -61,7 +78,9 @@
         videoDuration: '',
         relatedVideos: [],
         canScrollLeft: false,
-        canScrollRight: true
+        canScrollRight: true,
+        currentVideoIndex: 0, // Índice del video actual
+        sectionTitle: '', // Título de la sección
       };
     },
     computed: {
@@ -70,9 +89,13 @@
         return `https://player.vimeo.com/video/${videoId}`;
       },
     },
+    watch: {
+      '$route.query.videoSrc': 'fetchVideoDetails',
+    },
     created() {
       this.fetchVideoDetails();
       this.fetchRelatedVideos();
+      this.sectionTitle = this.getSectionTitle(this.$route.query.videoType);
     },
     mounted() {
       window.addEventListener('resize', this.updateHeights);
@@ -147,9 +170,34 @@
           videoDetails.style.height = `${videoContainer.clientHeight}px`;
         }
       },
-      handlePlayRelatedVideo(src) {
+      handlePlayRelatedVideo(src, index) {
         const videoType = this.$route.query.videoType;
         this.$router.push({ name: 'VideoPlayer', query: { videoSrc: src, videoType: videoType } });
+        this.currentVideoIndex = index;
+        this.fetchVideoDetails(); // Ensure details are updated immediately
+      },
+      playPreviousVideo() {
+        if (this.currentVideoIndex > 0) {
+          this.currentVideoIndex--;
+          const video = this.relatedVideos[this.currentVideoIndex];
+          this.handlePlayRelatedVideo(video.src, this.currentVideoIndex);
+        }
+      },
+      playNextVideo() {
+        if (this.currentVideoIndex < this.relatedVideos.length - 1) {
+          this.currentVideoIndex++;
+          const video = this.relatedVideos[this.currentVideoIndex];
+          this.handlePlayRelatedVideo(video.src, this.currentVideoIndex);
+        }
+      },
+      getSectionTitle(videoType) {
+        const titles = {
+          music: 'Music Videos',
+          commercial: 'Commercials',
+          underwater: 'Underwater',
+          film: 'Films',
+        };
+        return titles[videoType] || '';
       },
       scrollLeft() {
         const container = this.$refs.videoList;
@@ -186,19 +234,30 @@
     align-items: center;
   }
   
+  .video-player-page h1 {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+  
   .video-content {
-    margin-top: 50px;
     display: flex;
     width: 100%;
-    max-width: 1500px; 
+    max-width: 1500px;
     align-items: center;
-    justify-content: space-between; /* Space between the video and details */
-    padding: 20px;
+    justify-content: space-between;
     box-sizing: border-box;
+    position: relative; /* Para posicionar las flechas */
+  }
+  
+  .video-and-details {
+    display: flex;
+    flex-grow: 1; /* Permite que el contenedor crezca */
+    align-items: center;
+    justify-content: space-between;
   }
   
   .video-container {
-    flex: 0 0 70%; /* Take 70% of the parent width */
+    flex: 0 0 70%;
     position: relative;
     background-color: rgba(0, 0, 0, 0.8);
   }
@@ -206,7 +265,7 @@
   .video-container::after {
     content: "";
     display: block;
-    padding-bottom: 56.25%; /* Maintain 16:9 aspect ratio */
+    padding-bottom: 56.25%;
   }
   
   .video-container iframe {
@@ -219,7 +278,7 @@
   }
   
   .video-details {
-    flex: 0 0 30%; /* Take the remaining 30% of the parent width */
+    flex: 0 0 30%;
     background-color: rgba(27, 27, 27, 0.8);
     padding: 20px;
     border-radius: 10px;
@@ -269,7 +328,6 @@
     justify-content: center;
     background-color: #0000002c;
     overflow: hidden;
-    /* Oculta el contenido desbordado para que las flechas no se muevan */
   }
   
   .video-list {
@@ -277,19 +335,15 @@
     overflow-x: auto;
     scroll-behavior: smooth;
     max-width: calc(4 * 300px);
-    /* Ancho máximo para mostrar 4 videos a la vez, ajusta según el tamaño de los videos */
     gap: 0px;
-    /* Espacio entre los videos */
     flex-grow: 1;
-    /* Permite que el contenedor de videos crezca y ocupe el espacio disponible */
   }
   
   .video-item {
     position: relative;
     width: 300px;
-    height: 200px;
+    height: 150px;
     flex-shrink: 0;
-    /* Evita que los videos se encojan */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -316,7 +370,7 @@
   
   .play-button {
     position: relative;
-    top: 10%; /* Subir el botón */
+    top: 10%;
     transform: translate(0%, -60%);
     background-color: rgba(0, 0, 0, 0);
     border: none;
@@ -350,16 +404,35 @@
     color: #ccc;
   }
   
-  /* Ocultar la barra de desplazamiento en diferentes navegadores */
+  .arrow-container {
+    position: relative;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .left-arrow-container {
+    left: 0;
+  }
+  
+  .right-arrow-container {
+    right: 0;
+  }
+  
+  .invisible {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  
   .video-list::-webkit-scrollbar {
     display: none;
-    /* Ocultar en Chrome, Safari y Opera */
   }
   
   .video-list {
     -ms-overflow-style: none;
-    /* Ocultar en Internet Explorer y Edge */
     scrollbar-width: none;
-    /* Ocultar en Firefox */
   }
   </style>
+  
