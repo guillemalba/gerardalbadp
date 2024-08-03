@@ -17,6 +17,7 @@
               <img :src="vimeoIcon" alt="Vimeo" class="social-icon">
             </a>
           </div>
+          <h1>Lets Create!</h1>
         </div>
       </div>
     </footer>

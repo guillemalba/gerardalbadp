@@ -1,10 +1,11 @@
+<!-- RightSIdebar -->
 <template>
   <div class="right-sidebar">
     <!-- Contenido del Right Sidebar -->
     <div class="vertical-text">
-      <h2>Work</h2>
-      <h2>Bio</h2>
-      <h2>Contact</h2>
+      <h2 @click="goToSection('work')">Work</h2>
+      <h2 @click="goToSection('bio')">Bio</h2>
+      <h2 @click="goToFooter">Contact</h2>
     </div>
   </div>
 </template>
@@ -12,22 +13,49 @@
 <script>
 export default {
   name: 'RightSidebar',
+  methods: {
+    goToSection(section) {
+      if (section === 'work') {
+        this.$router.push({ name: 'Home' });
+        this.scrollToElement('#first-video-preview');
+      } else if (section === 'bio') {
+        this.$router.push({ name: 'Bio' });
+      }
+    },
+    goToFooter() {
+      this.$nextTick(() => {
+        const footer = document.querySelector('footer');
+        if (footer) {
+          footer.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    },
+    scrollToElement(selector) {
+      this.$nextTick(() => {
+        const element = document.querySelector(selector);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
+  }
 };
 </script>
 
 <style scoped>
 .right-sidebar {
-  width: 20px; /* Ajusta el ancho según tus necesidades */
+  width: 20px;
   background-color: #00000000;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Asegura que la barra ocupe toda la altura de la pantalla */
-  position: fixed; /* Fija la barra en su lugar */
-  right: 0; /* Alinea la barra a la derecha */
+  height: 100vh;
+  position: fixed;
+  right: 0;
   z-index: 1000;
-  border: none; /* Elimina cualquier borde */
-  box-shadow: none; /* Elimina cualquier sombra */
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
 }
 
 .vertical-text {
@@ -36,13 +64,13 @@ export default {
   align-items: center;
   justify-content: end;
   color: rgb(255, 255, 255);
-  height: 100%; /* Asegura que el contenedor ocupe toda la altura de la barra */
+  height: 100%;
   transform: rotate(180deg);
   white-space: nowrap;
 }
 
 .vertical-text h2 {
-  margin-bottom: 170px; /* Ajusta el valor para cambiar el espacio entre los elementos */
-  writing-mode: vertical-rl; /* Rotar el texto para alinear verticalmente */
+  margin-bottom: 170px;
+  writing-mode: vertical-rl;
 }
 </style>

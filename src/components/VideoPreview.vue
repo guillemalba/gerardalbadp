@@ -1,3 +1,4 @@
+<!-- VideoPreview.vue -->
 <template>
   <div class="video-preview" :style="{ backgroundImage: `url(${thumbnail})` }">
     <div class="overlay">
@@ -142,8 +143,6 @@ export default {
   }
 };
 </script>
-
-
 
 <style scoped>
 h1 {

@@ -1,9 +1,11 @@
+<!-- HomePage -->
 <template>
   <div class="home-page">
     <LeftSidebar />
     <div>
       <BackgroundVideo videoSrc="https://vimeo.com/522837592" />
       <VideoPreview
+        id="first-video-preview"
         title="MUSIC VIDEOS"
         :videoSrc="musicVideos[0].src"
         :relatedVideos="musicVideos"
@@ -33,7 +35,7 @@
       />
     </div>
     <RightSidebar />
-    <FooterPage/>
+    <FooterPage />
   </div>
 </template>
 

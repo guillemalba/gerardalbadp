@@ -1,8 +1,9 @@
+<!-- LeftSidebar -->
 <template>
   <div class="left-sidebar">
     <!-- Contenido del Left Sidebar -->
     <div class="vertical-text">
-      <h2>Gerard Alba</h2>
+      <h2 @click="goToHome">Gerard Alba</h2>
     </div>
   </div>
 </template>
@@ -10,6 +11,17 @@
 <script>
 export default {
   name: 'LeftSidebar',
+  methods: {
+    goToHome() {
+      this.$router.push({ name: 'Home' });
+      this.scrollToTop();
+    },
+    scrollToTop() {
+      this.$nextTick(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  }
 };
 </script>
 
@@ -26,6 +38,7 @@ export default {
   z-index: 1000; /* Asegura que la barra esté encima de otros contenidos */
   border: none; /* Elimina cualquier borde */
   box-shadow: none; /* Elimina cualquier sombra */
+  cursor: pointer;
 }
 
 .vertical-text {

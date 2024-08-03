@@ -1,74 +1,86 @@
+<!-- VideoPlayer.vue -->
 <template>
     <div class="video-player-page">
-      <h1>{{ sectionTitle }}</h1> <!-- Título de la sección -->
-      <div class="video-content">
-        <div 
-          class="arrow-container left-arrow-container" 
-          :class="{ invisible: currentVideoIndex === 0 }" 
-          @click="playPreviousVideo"
-        >
-          <span class="arrow">&#9664;</span>
-        </div>
-        <div class="video-and-details">
-          <div class="video-container" ref="videoContainer">
-            <iframe
-              :src="videoEmbedUrl"
-              frameborder="0"
-              allow="autoplay; fullscreen"
-              allowfullscreen
-              @load="updateHeights"
-            ></iframe>
+      <LeftSidebar />
+      <div class="main-content">
+        <h1>{{ sectionTitle }}</h1> <!-- Título de la sección -->
+        <div class="video-content">
+          <div 
+            class="arrow-container left-arrow-container" 
+            :class="{ invisible: currentVideoIndex === 0 }" 
+            @click="playPreviousVideo"
+          >
+            <span class="arrow">&#9664;</span>
           </div>
-          <div class="video-details" ref="videoDetails">
-            <h1>{{ videoTitle }}</h1>
-            <p>{{ videoDescription }}</p>
-            <ul>
-              <li><strong>Director:</strong> {{ videoDirector }}</li>
-              <li><strong>Producer:</strong> {{ videoProducer }}</li>
-              <li><strong>Duration:</strong> {{ videoDuration }}</li>
-            </ul>
-          </div>
-        </div>
-        <div 
-          class="arrow-container right-arrow-container" 
-          :class="{ invisible: currentVideoIndex === relatedVideos.length - 1 }" 
-          @click="playNextVideo"
-        >
-          <span class="arrow">&#9654;</span>
-        </div>
-      </div>
-      <div class="related-videos">
-        <h2>Related Videos</h2>
-        <div class="video-list-container">
-          <div v-if="canScrollLeft" class="arrow left-arrow" @click="scrollLeft">&#9664;</div>
-          <div class="video-list" ref="videoList">
-            <div
-              v-for="(video, index) in relatedVideos"
-              :key="video.id"
-              class="video-item"
-              :style="{ backgroundImage: `url(${video.thumbnail})` }"
-            >
-              <div class="hover-overlay">
-                <div class="video-info">
-                  <p>{{ video.title }} / {{ video.duration }}</p>
-                </div>
-                <button @click="handlePlayRelatedVideo(video.src, index)" class="play-button">
-                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                  </svg>
-                </button>
-              </div>
+          <div class="video-and-details">
+            <div class="video-container" ref="videoContainer">
+              <iframe
+                :src="videoEmbedUrl"
+                frameborder="0"
+                allow="autoplay; fullscreen"
+                allowfullscreen
+                @load="updateHeights"
+              ></iframe>
+            </div>
+            <div class="video-details" ref="videoDetails">
+              <h1>{{ videoTitle }}</h1>
+              <p>{{ videoDescription }}</p>
+              <ul>
+                <li><strong>Director:</strong> {{ videoDirector }}</li>
+                <li><strong>Producer:</strong> {{ videoProducer }}</li>
+                <li><strong>Duration:</strong> {{ videoDuration }}</li>
+              </ul>
             </div>
           </div>
-          <div v-if="canScrollRight" class="arrow right-arrow" @click="scrollRight">&#9654;</div>
+          <div 
+            class="arrow-container right-arrow-container" 
+            :class="{ invisible: currentVideoIndex === relatedVideos.length - 1 }" 
+            @click="playNextVideo"
+          >
+            <span class="arrow">&#9654;</span>
+          </div>
+        </div>
+        <div class="related-videos">
+          <h2>Related Videos</h2>
+          <div class="video-list-container">
+            <div v-if="canScrollLeft" class="arrow left-arrow" @click="scrollLeft">&#9664;</div>
+            <div class="video-list" ref="videoList">
+              <div
+                v-for="(video, index) in relatedVideos"
+                :key="video.id"
+                class="video-item"
+                :style="{ backgroundImage: `url(${video.thumbnail})` }"
+              >
+                <div class="hover-overlay">
+                  <div class="video-info">
+                    <p>{{ video.title }} / {{ video.duration }}</p>
+                  </div>
+                  <button @click="handlePlayRelatedVideo(video.src, index)" class="play-button">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div v-if="canScrollRight" class="arrow right-arrow" @click="scrollRight">&#9654;</div>
+          </div>
         </div>
       </div>
+      <RightSidebar />
     </div>
   </template>
   
   <script>
+  import LeftSidebar from './LeftSidebar.vue';
+  import RightSidebar from './RightSidebar.vue';  
+  
   export default {
     name: 'VideoPlayer',
+    components: {
+      LeftSidebar,
+      RightSidebar
+    },
     data() {
       return {
         videoTitle: '',
@@ -227,16 +239,16 @@
   <style scoped>
   .video-player-page {
     display: flex;
-    flex-direction: column;
     height: 100vh;
     background-color: #000;
     color: #fff;
-    align-items: center;
   }
   
-  .video-player-page h1 {
-    font-size: 36px;
-    margin: 20px 0;
+  .main-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    align-items: center;
   }
   
   .video-content {
@@ -435,4 +447,3 @@
     scrollbar-width: none;
   }
   </style>
-  
