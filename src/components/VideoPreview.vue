@@ -57,6 +57,10 @@ export default {
     relatedVideos: {
       type: Array,
       required: true
+    },
+    type: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -100,7 +104,7 @@ export default {
       }
     },
     playVideo() {
-      this.$emit('play-video', this.videoSrc);
+      this.$emit('play-video', this.videoSrc, this.type);
     },
     toggleVideoList() {
       this.showVideoList = !this.showVideoList;
@@ -133,7 +137,7 @@ export default {
       return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
     },
     handlePlayRelatedVideo(src) {
-      this.$emit('play-video', src);
+      this.$emit('play-video', src, this.type);
     }
   }
 };

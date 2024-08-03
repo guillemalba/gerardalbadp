@@ -7,24 +7,28 @@
         title="MUSIC VIDEOS"
         :videoSrc="musicVideos[0].src"
         :relatedVideos="musicVideos"
+        type="music"
         @play-video="handlePlayVideo"
       />
       <VideoPreview
         title="COMMERCIALS"
         :videoSrc="commercialVideos[0].src"
         :relatedVideos="commercialVideos"
+        type="commercial"
         @play-video="handlePlayVideo"
       />
       <VideoPreview
         title="UNDERWATER"
         :videoSrc="underwaterVideos[0].src"
         :relatedVideos="underwaterVideos"
+        type="underwater"
         @play-video="handlePlayVideo"
       />
       <VideoPreview
         title="FILMS"
         :videoSrc="filmVideos[0].src"
         :relatedVideos="filmVideos"
+        type="film"
         @play-video="handlePlayVideo"
       />
     </div>
@@ -47,7 +51,7 @@ export default {
     RightSidebar,
     VideoPreview,
     BackgroundVideo,
-    FooterPage // Registra el componente Footer
+    FooterPage
   },
   data() {
     return {
@@ -76,8 +80,8 @@ export default {
     };
   },
   methods: {
-    handlePlayVideo(src) {
-      this.$router.push({ name: 'VideoPlayer', query: { videoSrc: src } });
+    handlePlayVideo(src, type) {
+      this.$router.push({ name: 'VideoPlayer', query: { videoSrc: src, videoType: type } });
     }
   }
 };
