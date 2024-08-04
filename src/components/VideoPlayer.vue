@@ -2,11 +2,12 @@
   <div class="video-player-page">
     <LeftSidebar />
     <div class="main-content">
-      <h1>{{ sectionTitle }}</h1> <!-- Título de la sección -->
+      <button class="close-button" @click="redirectToHomePage">&times;</button>
+      <h1>{{ sectionTitle }}</h1>
       <div class="video-content">
-        <div 
-          class="arrow-container left-arrow-container" 
-          :class="{ invisible: currentVideoIndex === 0 }" 
+        <div
+          class="arrow-container left-arrow-container"
+          :class="{ invisible: currentVideoIndex === 0 }"
           @click="playPreviousVideo"
         >
           <span class="arrow chevron">&#x276E;</span>
@@ -23,17 +24,17 @@
           </div>
           <div class="video-details" ref="videoDetails">
             <h1>{{ videoTitle }}</h1>
-            <p>{{ videoDescription }}</p>
-            <ul>
+            <div v-html="videoDescription" class="video-description"></div>
+            <ul class="video-credits">
               <li><strong>Director:</strong> {{ videoDirector }}</li>
               <li><strong>Producer:</strong> {{ videoProducer }}</li>
               <li><strong>Duration:</strong> {{ videoDuration }}</li>
             </ul>
           </div>
         </div>
-        <div 
-          class="arrow-container right-arrow-container" 
-          :class="{ invisible: currentVideoIndex === relatedVideos.length - 1 }" 
+        <div
+          class="arrow-container right-arrow-container"
+          :class="{ invisible: currentVideoIndex === relatedVideos.length - 1 }"
           @click="playNextVideo"
         >
           <span class="arrow chevron">&#x276F;</span>
@@ -41,9 +42,11 @@
       </div>
       <div class="related-videos">
         <div class="video-list-container">
-          <div class="arrow-container left-arrow-container" 
-               :class="{ invisible: !canScrollLeftRelated }" 
-               @click="scrollLeftRelated">
+          <div
+            class="arrow-container left-arrow-container"
+            :class="{ invisible: !canScrollLeftRelated }"
+            @click="scrollLeftRelated"
+          >
             <span class="arrow left-arrow chevron">&#x276E;</span>
           </div>
           <div class="video-list" ref="videoList">
@@ -58,8 +61,20 @@
                 <div class="video-info">
                   <p>{{ video.title }} / {{ video.duration }}</p>
                 </div>
-                <button @click="handlePlayRelatedVideo(video.src, index)" class="play-button">
-                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button
+                  @click="handlePlayRelatedVideo(video.src, index)"
+                  class="play-button"
+                >
+                  <svg
+                    class="icon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
                   </svg>
                 </button>
@@ -69,9 +84,11 @@
               </div>
             </div>
           </div>
-          <div class="arrow-container right-arrow-container" 
-               :class="{ invisible: !canScrollRightRelated }" 
-               @click="scrollRightRelated">
+          <div
+            class="arrow-container right-arrow-container"
+            :class="{ invisible: !canScrollRightRelated }"
+            @click="scrollRightRelated"
+          >
             <span class="arrow right-arrow chevron">&#x276F;</span>
           </div>
         </div>
@@ -83,7 +100,7 @@
 
 <script>
 import LeftSidebar from './LeftSidebar.vue';
-import RightSidebar from './RightSidebar.vue';  
+import RightSidebar from './RightSidebar.vue';
 
 export default {
   name: 'VideoPlayer',
@@ -103,8 +120,8 @@ export default {
       canScrollRightRelated: true,
       canScrollLeftMain: false,
       canScrollRightMain: true,
-      currentVideoIndex: 0, // Índice del video actual
-      sectionTitle: '', // Título de la sección
+      currentVideoIndex: 0,
+      sectionTitle: '',
     };
   },
   computed: {
@@ -129,6 +146,7 @@ export default {
     }
     this.updateHeights();
     this.$nextTick(this.checkScrollRelated);
+    this.restoreScrollPosition();
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.updateHeights);
@@ -138,15 +156,19 @@ export default {
     }
   },
   methods: {
+    redirectToHomePage() {
+      localStorage.setItem('scrollPosition', window.scrollY);
+      this.$router.push({ name: 'Home' });
+    },
     async fetchVideoDetails() {
       const videoId = this.$route.query.videoSrc.split('/').pop();
       const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
       const data = await response.json();
       const videoData = data[0];
       this.videoTitle = videoData.title;
-      this.videoDescription = videoData.description;
-      this.videoDirector = videoData.user_name; // Assuming the user name is the director
-      this.videoProducer = videoData.user_name; // Assuming the user name is the producer
+      this.videoDescription = videoData.description.replace(/\n/g, '<br />');
+      this.videoDirector = videoData.user_name;
+      this.videoProducer = videoData.user_name;
       this.videoDuration = this.formatDuration(videoData.duration);
     },
     formatDuration(seconds) {
@@ -191,10 +213,10 @@ export default {
         const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
         const data = await response.json();
         video.thumbnail = data[0].thumbnail_large;
-        video.title = data[0].title; // Assuming the API provides the title
-        video.duration = this.formatDuration(data[0].duration); // Convert duration to mm:ss format
+        video.title = data[0].title;
+        video.duration = this.formatDuration(data[0].duration);
       }
-      this.$nextTick(this.checkScrollRelated); // Ensure scroll checks are updated after loading thumbnails
+      this.$nextTick(this.checkScrollRelated);
     },
     updateHeights() {
       const videoContainer = this.$refs.videoContainer;
@@ -207,7 +229,7 @@ export default {
       const videoType = this.$route.query.videoType;
       this.$router.push({ name: 'VideoPlayer', query: { videoSrc: src, videoType: videoType } });
       this.currentVideoIndex = index;
-      this.fetchVideoDetails(); // Ensure details are updated immediately
+      this.fetchVideoDetails();
       this.scrollToActiveVideo();
     },
     playPreviousVideo() {
@@ -256,22 +278,30 @@ export default {
         const offsetLeft = activeRect.left - containerRect.left + container.scrollLeft;
         const scrollOffset = offsetLeft - container.clientWidth / 2 + activeVideo.clientWidth / 2;
         container.scrollTo({ left: scrollOffset, behavior: 'smooth' });
-        this.$nextTick(this.checkScrollRelated); // Update scroll checks after scrolling
+        this.$nextTick(this.checkScrollRelated);
       }
     },
     checkScrollRelated() {
       const container = this.$refs.videoList;
       if (container) {
         this.canScrollLeftRelated = container.scrollLeft > 0;
-        this.canScrollRightRelated = container.scrollWidth > container.clientWidth + container.scrollLeft + 1; // Ajuste aquí
+        this.canScrollRightRelated =
+          container.scrollWidth > container.clientWidth + container.scrollLeft + 1;
       }
     },
-    checkScroll() {
-      const container = this.$refs.videoList;
-      if (container) {
-        this.canScrollLeftRelated = container.scrollLeft > 0;
-        this.canScrollRightRelated = container.scrollWidth > container.clientWidth + container.scrollLeft + 1; // Ajuste aquí
+    saveScrollPosition() {
+      localStorage.setItem('scrollPosition', window.scrollY);
+    },
+    restoreScrollPosition() {
+      const scrollPosition = localStorage.getItem('scrollPosition');
+      if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition));
+        localStorage.removeItem('scrollPosition');
       }
+    },
+    goBack() {
+      this.saveScrollPosition();
+      this.$router.go(-1);
     },
   },
 };
@@ -292,6 +322,22 @@ export default {
   flex-direction: column;
   flex: 1;
   align-items: center;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 55px;
+  color: white;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #ccc;
 }
 
 .video-content {
@@ -301,12 +347,12 @@ export default {
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
-  position: relative; /* Para posicionar las flechas */
+  position: relative;
 }
 
 .video-and-details {
   display: flex;
-  flex-grow: 1; /* Permite que el contenedor crezca */
+  flex-grow: 1;
   align-items: center;
   justify-content: space-between;
 }
@@ -318,7 +364,7 @@ export default {
 }
 
 .video-container::after {
-  content: "";
+  content: '';
   display: block;
   padding-bottom: 56.25%;
 }
@@ -348,20 +394,21 @@ export default {
   margin-bottom: 10px;
 }
 
-.video-details p {
+.video-description {
   margin-bottom: 20px;
+  white-space: pre-wrap;
 }
 
-.video-details ul {
+.video-credits {
   list-style: none;
   padding: 0;
 }
 
-.video-details li {
+.video-credits li {
   margin-bottom: 10px;
 }
 
-.video-details strong {
+.video-credits strong {
   color: #ccc;
 }
 
