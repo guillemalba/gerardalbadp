@@ -1,4 +1,4 @@
-<!-- VideoPreview.vue -->
+<!-- VideoPreview -->
 <template>
   <div class="video-preview" :style="{ backgroundImage: `url(${thumbnail})` }">
     <div class="overlay">
@@ -23,12 +23,18 @@
       <div v-if="showVideoList" class="video-list-container">
         <div v-if="canScrollLeft" class="arrow left-arrow" @click="scrollLeft">&#9664;</div>
         <div class="video-list" ref="videoList">
-          <div v-for="video in relatedVideos" :key="video.id" class="video-item" :style="{ backgroundImage: `url(${video.thumbnail})` }">
+          <div
+            v-for="video in relatedVideos"
+            :key="video.id"
+            class="video-item"
+            :style="{ backgroundImage: `url(${video.thumbnail})` }"
+            @click="handlePlayRelatedVideo(video.src)"
+          >
             <div class="hover-overlay">
               <div class="video-info">
                 <p>{{ video.title }} / {{ video.duration }}</p>
               </div>
-              <button @click="handlePlayRelatedVideo(video.src)" class="play-button">
+              <button class="play-button">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -160,6 +166,7 @@ h1 {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  min-height: 800px;
 }
 
 .overlay {
@@ -216,6 +223,7 @@ h1 {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  cursor: pointer;
 }
 
 .hover-overlay {

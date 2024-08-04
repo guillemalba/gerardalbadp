@@ -4,35 +4,14 @@
     <LeftSidebar />
     <div>
       <BackgroundVideo videoSrc="https://vimeo.com/522837592" />
-      <VideoPreview
-        id="first-video-preview"
-        title="MUSIC VIDEOS"
-        :videoSrc="musicVideos[0].src"
-        :relatedVideos="musicVideos"
-        type="music"
-        @play-video="handlePlayVideo"
-      />
-      <VideoPreview
-        title="COMMERCIALS"
-        :videoSrc="commercialVideos[0].src"
-        :relatedVideos="commercialVideos"
-        type="commercial"
-        @play-video="handlePlayVideo"
-      />
-      <VideoPreview
-        title="UNDERWATER"
-        :videoSrc="underwaterVideos[0].src"
-        :relatedVideos="underwaterVideos"
-        type="underwater"
-        @play-video="handlePlayVideo"
-      />
-      <VideoPreview
-        title="FILMS"
-        :videoSrc="filmVideos[0].src"
-        :relatedVideos="filmVideos"
-        type="film"
-        @play-video="handlePlayVideo"
-      />
+      <VideoPreview id="first-video-preview" title="MUSIC VIDEOS" :videoSrc="musicVideos[0].src"
+        :relatedVideos="musicVideos" type="music" @play-video="handlePlayVideo" />
+      <VideoPreview title="COMMERCIALS" :videoSrc="commercialVideos[0].src" :relatedVideos="commercialVideos"
+        type="commercial" @play-video="handlePlayVideo" />
+      <VideoPreview title="UNDERWATER" :videoSrc="underwaterVideos[0].src" :relatedVideos="underwaterVideos"
+        type="underwater" @play-video="handlePlayVideo" />
+      <VideoPreview title="FILMS" :videoSrc="filmVideos[0].src" :relatedVideos="filmVideos" type="film"
+        @play-video="handlePlayVideo" />
     </div>
     <RightSidebar />
     <FooterPage />
@@ -67,9 +46,8 @@ export default {
         { id: 2, src: 'https://vimeo.com/199707225' },
         { id: 3, src: 'https://vimeo.com/189584267' },
         { id: 4, src: 'https://vimeo.com/522549222' },
-        { id: 5, src: 'https://vimeo.com/189584267' },
-        { id: 6, src: 'https://vimeo.com/522549222' },
-        { id: 7, src: 'https://vimeo.com/189584267' }
+        { id: 5, src: 'https://vimeo.com/522377522' },
+        { id: 6, src: 'https://vimeo.com/522726870' }
       ],
       underwaterVideos: [
         { id: 1, src: 'https://vimeo.com/522377522' },
@@ -81,9 +59,26 @@ export default {
       ]
     };
   },
+  mounted() {
+    this.restoreScrollPosition();
+  },
   methods: {
     handlePlayVideo(src, type) {
+      this.saveScrollPosition(); // Guardar la posición del scroll antes de redirigir
       this.$router.push({ name: 'VideoPlayer', query: { videoSrc: src, videoType: type } });
+    },
+    saveScrollPosition() {
+      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+      localStorage.setItem('scrollPosition', scrollPosition.toString());
+    },
+    restoreScrollPosition() {
+      const scrollPosition = localStorage.getItem('scrollPosition');
+      if (scrollPosition !== null) {
+        this.$nextTick(() => {
+          window.scrollTo(0, parseInt(scrollPosition, 10));
+          localStorage.removeItem('scrollPosition');
+        });
+      }
     }
   }
 };
@@ -93,12 +88,14 @@ export default {
 .home-page {
   position: relative;
   display: flex;
-  flex-direction: column; /* Asegura que el footer esté al final */
+  flex-direction: column;
+  /* Asegura que el footer esté al final */
   background-color: rgb(0, 0, 0);
   overflow: hidden;
 }
 
-.home-page > div {
-  flex: 1; /* Asegura que el contenido principal ocupe el espacio disponible */
+.home-page>div {
+  flex: 1;
+  /* Asegura que el contenido principal ocupe el espacio disponible */
 }
 </style>

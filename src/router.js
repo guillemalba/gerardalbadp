@@ -10,7 +10,7 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/video-player', // Nueva ruta
+    path: '/video', // Nueva ruta
     name: 'VideoPlayer',
     component: VideoPlayer,
     props: route => ({ videoSrc: route.query.videoSrc }) // Pasar videoSrc como prop

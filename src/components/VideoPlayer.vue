@@ -1,3 +1,4 @@
+<!-- VideoPlayer -->
 <template>
   <div class="video-player-page">
     <LeftSidebar />
@@ -5,22 +6,14 @@
       <button class="close-button" @click="redirectToHomePage">&times;</button>
       <h1>{{ sectionTitle }}</h1>
       <div class="video-content">
-        <div
-          class="arrow-container left-arrow-container"
-          :class="{ invisible: currentVideoIndex === 0 }"
-          @click="playPreviousVideo"
-        >
+        <div class="arrow-container left-arrow-container" :class="{ invisible: currentVideoIndex === 0 }"
+          @click="playPreviousVideo">
           <span class="arrow chevron">&#x276E;</span>
         </div>
         <div class="video-and-details">
           <div class="video-container" ref="videoContainer">
-            <iframe
-              :src="videoEmbedUrl"
-              frameborder="0"
-              allow="autoplay; fullscreen"
-              allowfullscreen
-              @load="updateHeights"
-            ></iframe>
+            <iframe :src="videoEmbedUrl" frameborder="0" allow="autoplay; fullscreen" allowfullscreen
+              @load="updateHeights"></iframe>
           </div>
           <div class="video-details" ref="videoDetails">
             <h1>{{ videoTitle }}</h1>
@@ -32,49 +25,28 @@
             </ul>
           </div>
         </div>
-        <div
-          class="arrow-container right-arrow-container"
-          :class="{ invisible: currentVideoIndex === relatedVideos.length - 1 }"
-          @click="playNextVideo"
-        >
+        <div class="arrow-container right-arrow-container"
+          :class="{ invisible: currentVideoIndex === relatedVideos.length - 1 }" @click="playNextVideo">
           <span class="arrow chevron">&#x276F;</span>
         </div>
       </div>
       <div class="related-videos">
         <div class="video-list-container">
-          <div
-            class="arrow-container left-arrow-container"
-            :class="{ invisible: !canScrollLeftRelated }"
-            @click="scrollLeftRelated"
-          >
+          <div class="arrow-container left-arrow-container" :class="{ invisible: !canScrollLeftRelated }"
+            @click="scrollLeftRelated">
             <span class="arrow left-arrow chevron">&#x276E;</span>
           </div>
           <div class="video-list" ref="videoList">
-            <div
-              v-for="(video, index) in relatedVideos"
-              :key="video.id"
-              class="video-item"
+            <div v-for="(video, index) in relatedVideos" :key="video.id" class="video-item"
               :class="{ 'active-video': currentVideoIndex === index }"
-              :style="{ backgroundImage: `url(${video.thumbnail})` }"
-            >
+              :style="{ backgroundImage: `url(${video.thumbnail})` }" @click="handlePlayRelatedVideo(video.src, index)">
               <div class="hover-overlay">
                 <div class="video-info">
                   <p>{{ video.title }} / {{ video.duration }}</p>
                 </div>
-                <button
-                  @click="handlePlayRelatedVideo(video.src, index)"
-                  class="play-button"
-                >
-                  <svg
-                    class="icon"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
+                <button class="play-button">
+                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3"></polygon>
                   </svg>
                 </button>
@@ -84,11 +56,8 @@
               </div>
             </div>
           </div>
-          <div
-            class="arrow-container right-arrow-container"
-            :class="{ invisible: !canScrollRightRelated }"
-            @click="scrollRightRelated"
-          >
+          <div class="arrow-container right-arrow-container" :class="{ invisible: !canScrollRightRelated }"
+            @click="scrollRightRelated">
             <span class="arrow right-arrow chevron">&#x276F;</span>
           </div>
         </div>
@@ -127,7 +96,7 @@ export default {
   computed: {
     videoEmbedUrl() {
       const videoId = this.$route.query.videoSrc.split('/').pop();
-      return `https://player.vimeo.com/video/${videoId}`;
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1`;
     },
   },
   watch: {
@@ -157,7 +126,7 @@ export default {
   },
   methods: {
     redirectToHomePage() {
-      localStorage.setItem('scrollPosition', window.scrollY);
+      this.saveScrollPosition();
       this.$router.push({ name: 'Home' });
     },
     async fetchVideoDetails() {
@@ -170,6 +139,7 @@ export default {
       this.videoDirector = videoData.user_name;
       this.videoProducer = videoData.user_name;
       this.videoDuration = this.formatDuration(videoData.duration);
+      this.updateCurrentVideoIndex(videoId);
     },
     formatDuration(seconds) {
       const minutes = Math.floor(seconds / 60);
@@ -190,9 +160,8 @@ export default {
           { id: 2, src: 'https://vimeo.com/199707225', thumbnail: '', title: '', duration: '' },
           { id: 3, src: 'https://vimeo.com/189584267', thumbnail: '', title: '', duration: '' },
           { id: 4, src: 'https://vimeo.com/522549222', thumbnail: '', title: '', duration: '' },
-          { id: 5, src: 'https://vimeo.com/189584267', thumbnail: '', title: '', duration: '' },
-          { id: 6, src: 'https://vimeo.com/522549222', thumbnail: '', title: '', duration: '' },
-          { id: 7, src: 'https://vimeo.com/189584267', thumbnail: '', title: '', duration: '' }
+          { id: 5, src: 'https://vimeo.com/522377522', thumbnail: '', title: '', duration: '' },
+          { id: 6, src: 'https://vimeo.com/522726870', thumbnail: '', title: '', duration: '' }
         ];
       } else if (videoType === 'underwater') {
         this.relatedVideos = [
@@ -303,11 +272,15 @@ export default {
       this.saveScrollPosition();
       this.$router.go(-1);
     },
+    updateCurrentVideoIndex(videoId) {
+      this.currentVideoIndex = this.relatedVideos.findIndex(video => video.src.endsWith(videoId));
+    },
   },
 };
 </script>
 
 <style scoped>
+/* CSS remains unchanged */
 .video-player-page {
   display: flex;
   height: 100vh;
@@ -450,6 +423,7 @@ export default {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  cursor: pointer;
 }
 
 .playing-indicator {
