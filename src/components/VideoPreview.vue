@@ -1,27 +1,12 @@
-<!-- VideoPreview -->
 <template>
   <div class="video-preview" :style="{ backgroundImage: `url(${thumbnail})` }">
     <div class="overlay">
       <h1>{{ title }}</h1>
-      <button @click="playVideo" class="custom-button">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="5 3 19 12 5 21 5 3"></polygon>
-        </svg>
-      </button>
-
-      <button @click="toggleVideoList" class="custom-button">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"></line>
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-        </svg>
-        More
-      </button>
+      <CButton icon="play" :onClick="playVideo" />
     </div>
     <transition name="slide-fade">
       <div v-if="showVideoList" class="video-list-container">
-        <div v-if="canScrollLeft" class="arrow left-arrow" @click="scrollLeft">&#9664;</div>
+        <div v-if="canScrollLeft" class="arrow left-arrow" @click="scrollLeft">&#x276E;</div>
         <div class="video-list" ref="videoList">
           <div
             v-for="video in relatedVideos"
@@ -35,7 +20,7 @@
                 <p>{{ video.title }} / {{ video.duration }}</p>
               </div>
               <button class="play-button">
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="white"
                   stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polygon points="5 3 19 12 5 21 5 3"></polygon>
                 </svg>
@@ -43,15 +28,28 @@
             </div>
           </div>
         </div>
-        <div v-if="canScrollRight" class="arrow right-arrow" @click="scrollRight">&#9654;</div>
+        <div v-if="canScrollRight" class="arrow right-arrow" @click="scrollRight">&#x276F;</div>
       </div>
     </transition>
+
+    <button @click="toggleVideoList" class="custom-button toggle-button" :class="{ 'moved-up': showVideoList }">
+      <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline :points="showVideoList ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"></polyline>
+      </svg>
+      <span>{{ showVideoList ? 'Show Less' : 'Show More' }}</span>
+    </button>
   </div>
 </template>
 
 <script>
+import CButton from './CButton.vue';
+
 export default {
   name: 'VideoPreview',
+  components: {
+    CButton
+  },
   props: {
     title: {
       type: String,
@@ -297,37 +295,36 @@ h1 {
   margin: 10px 0;
   padding: 12px 24px;
   background-color: #0000001b;
-  border: 2px solid #f4f4f4ac;
-  color: #f4f4f4ac;
+  color: #ffffff;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  border-radius: 15px;
+  border: 1px solid white; /* Added white border */
+  border-radius: 200px; /* Puedes ajustar el valor según tus preferencias */
   transition: all 0.3s ease;
-  width: 75px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   text-transform: uppercase;
+  z-index: 1000;
+  white-space: nowrap; /* Ensure the button content stays in a single line */
 }
 
 .custom-button .icon {
-  margin-right: 0px;
+  margin-right: 8px; /* Ajusta el margen entre el icono y el texto si es necesario */
   width: 25px;
   height: 25px;
 }
 
-.custom-button:hover {
-  color: #ffffff;
-  transform: scale(1.05);
-  border: 2px solid #ffffff;
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+.custom-button span {
+  margin-left: 8px; /* Add some spacing between the icon and the text */
 }
 
-.custom-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+.custom-button:hover {
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 
 /* Ocultar la barra de desplazamiento en diferentes navegadores */
@@ -353,5 +350,21 @@ h1 {
 .slide-fade-leave-to {
   transform: translateY(10px);
   opacity: 0;
+}
+
+.toggle-button {
+  position: absolute;
+  bottom: 10px;
+  /* Ajusta según sea necesario para la posición inicial */
+  left: 50%;
+  transform: translateX(-50%);
+  transition: all 0.5s ease;
+}
+
+.toggle-button.moved-up {
+  bottom: auto;
+  top: 70%;
+  /* Ajusta según sea necesario para la posición final */
+  transform: translate(-50%, -40%);
 }
 </style>
