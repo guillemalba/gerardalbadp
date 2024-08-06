@@ -38,7 +38,6 @@ export default {
   z-index: 1000; /* Asegura que la barra esté encima de otros contenidos */
   border: none; /* Elimina cualquier borde */
   box-shadow: none; /* Elimina cualquier sombra */
-  cursor: pointer;
 }
 
 .vertical-text {
@@ -46,12 +45,13 @@ export default {
   align-items: center;
   color: rgb(255, 255, 255);
   justify-content: center;
-  height: 100%; /* Asegura que el contenedor ocupe toda la altura de la barra */
+  height: auto; /* Asegura que el contenedor ocupe toda la altura de la barra */
   transform: rotate(-90deg); /* Rota el contenedor para que el texto se muestre verticalmente */
   white-space: nowrap;
 }
 
 .vertical-text h2 {
   margin: 0; /* Elimina el margen para centrar el texto */
+  cursor: pointer;
 }
 </style>

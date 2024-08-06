@@ -1,3 +1,4 @@
+<!-- VideoPreview -->
 <template>
   <div class="video-preview" :style="{ backgroundImage: `url(${thumbnail})` }">
     <div class="overlay">
@@ -6,7 +7,9 @@
     </div>
     <transition name="slide-fade">
       <div v-if="showVideoList" class="video-list-container">
-        <div v-if="canScrollLeft" class="arrow left-arrow" @click="scrollLeft">&#x276E;</div>
+        <div class="arrow-container left-arrow-container" :class="{ invisible: !canScrollLeft }" @click="scrollLeft">
+          <span class="arrow left-arrow chevron">&#x276E;</span>
+        </div>
         <div class="video-list" ref="videoList">
           <div
             v-for="video in relatedVideos"
@@ -28,7 +31,9 @@
             </div>
           </div>
         </div>
-        <div v-if="canScrollRight" class="arrow right-arrow" @click="scrollRight">&#x276F;</div>
+        <div class="arrow-container right-arrow-container" :class="{ invisible: !canScrollRight }" @click="scrollRight">
+          <span class="arrow right-arrow chevron">&#x276F;</span>
+        </div>
       </div>
     </transition>
 
@@ -215,7 +220,7 @@ h1 {
 .video-item {
   position: relative;
   width: 300px;
-  height: 200px;
+  height: 150px;
   flex-shrink: 0;
   /* Evita que los videos se encojan */
   background-size: cover;
@@ -273,22 +278,46 @@ h1 {
   font-size: 2em;
   user-select: none;
   padding: 0 10px;
-  position: absolute;
-  /* Asegura que las flechas sean estáticas */
-  z-index: 1000;
-  /* Asegura que las flechas estén encima de los videos */
-}
-
-.left-arrow {
-  margin-right: 1400px;
-}
-
-.right-arrow {
-  margin-left: 1400px;
 }
 
 .arrow:hover {
   color: #ccc;
+}
+
+.arrow-container {
+  position: relative;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-arrow-container {
+  left: 0;
+}
+
+.right-arrow-container {
+  right: 0;
+}
+
+.invisible {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.video-list::-webkit-scrollbar {
+  display: none;
+}
+
+.video-list {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.chevron {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
 }
 
 .custom-button {
@@ -363,8 +392,8 @@ h1 {
 
 .toggle-button.moved-up {
   bottom: auto;
-  top: 70%;
+  top: 71%;
   /* Ajusta según sea necesario para la posición final */
-  transform: translate(-50%, -40%);
+  transform: translate(-50%, 40%);
 }
 </style>
