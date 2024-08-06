@@ -1,4 +1,3 @@
-<!-- VideoPreview -->
 <template>
   <div class="video-preview" :style="{ backgroundImage: `url(${thumbnail})` }">
     <div class="overlay">
@@ -215,6 +214,24 @@ h1 {
   /* Espacio entre los videos */
   flex-grow: 1;
   /* Permite que el contenedor de videos crezca y ocupe el espacio disponible */
+}
+
+@media (max-width: 1500px) {
+  .video-list {
+    max-width: calc(3 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
+  }
+}
+
+@media (max-width: 1200px) {
+  .video-list {
+    max-width: calc(2 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
+  }
+}
+
+@media (max-width: 900px) {
+  .video-list {
+    max-width: calc(1 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
+  }
 }
 
 .video-item {

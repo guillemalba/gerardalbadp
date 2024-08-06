@@ -59,9 +59,6 @@ export default {
       ]
     };
   },
-  mounted() {
-    this.restoreScrollPosition();
-  },
   methods: {
     handlePlayVideo(src, type) {
       this.saveScrollPosition(); // Guardar la posición del scroll antes de redirigir
@@ -71,15 +68,6 @@ export default {
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       localStorage.setItem('scrollPosition', scrollPosition.toString());
     },
-    restoreScrollPosition() {
-      const scrollPosition = localStorage.getItem('scrollPosition');
-      if (scrollPosition !== null) {
-        this.$nextTick(() => {
-          window.scrollTo(0, parseInt(scrollPosition, 10));
-          localStorage.removeItem('scrollPosition');
-        });
-      }
-    }
   }
 };
 </script>

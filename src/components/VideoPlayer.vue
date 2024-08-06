@@ -115,7 +115,6 @@ export default {
     }
     this.updateHeights();
     this.$nextTick(this.checkScrollRelated);
-    this.restoreScrollPosition();
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.updateHeights);
@@ -126,7 +125,6 @@ export default {
   },
   methods: {
     redirectToHomePage() {
-      this.saveScrollPosition();
       this.$router.push({ name: 'Home' });
     },
     async fetchVideoDetails() {
@@ -258,18 +256,7 @@ export default {
           container.scrollWidth > container.clientWidth + container.scrollLeft + 1;
       }
     },
-    saveScrollPosition() {
-      localStorage.setItem('scrollPosition', window.scrollY);
-    },
-    restoreScrollPosition() {
-      const scrollPosition = localStorage.getItem('scrollPosition');
-      if (scrollPosition) {
-        window.scrollTo(0, parseInt(scrollPosition));
-        localStorage.removeItem('scrollPosition');
-      }
-    },
     goBack() {
-      this.saveScrollPosition();
       this.$router.go(-1);
     },
     updateCurrentVideoIndex(videoId) {
