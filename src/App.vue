@@ -25,6 +25,14 @@ body {
 .home-page {
   display: flex;
   flex: 1;
+  
+}
+
+html, body {
+  height: 100%;
+  background-color: #000;
+  margin: 0;
+  padding: 0;
 }
 
 .left-sidebar, .right-sidebar {

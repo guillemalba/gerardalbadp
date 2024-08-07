@@ -216,49 +216,7 @@ h1 {
   /* Permite que el contenedor de videos crezca y ocupe el espacio disponible */
 }
 
-@media (max-width: 1500px) {
-  .video-list {
-    max-width: calc(3 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
-  }
-}
 
-@media (max-width: 1200px) {
-  .video-list {
-    max-width: calc(2 * 300px); /* Ancho máximo para mostrar 2 videos a la vez */
-  }
-}
-
-@media (max-width: 900px) {
-  .video-list {
-    max-width: calc(1 * 200px); /* Ancho máximo para mostrar 1 video a la vez */
-  }
-
-  .video-item {
-    width: 200px; /* Ancho de las miniaturas reducido a 200px */
-    height: 150px; /* Ajustar la altura según el nuevo ancho */
-    position: relative;
-    flex-shrink: 0;
-    /* Evita que los videos se encojan */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-  }
-}
-
-@media (min-width: 900px) {
-  .video-item {
-    width: 300px;
-    height: 150px;
-    position: relative;
-    flex-shrink: 0;
-    /* Evita que los videos se encojan */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-  }
-}
 
 .hover-overlay {
   position: absolute;
@@ -428,10 +386,52 @@ h1 {
   transform: translate(-50%, 40%);
 }
 
+@media (max-width: 1500px) {
+  .video-list {
+    max-width: calc(3 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
+  }
+}
+
+@media (max-width: 1200px) {
+  .video-list {
+    max-width: calc(2 * 300px); /* Ancho máximo para mostrar 2 videos a la vez */
+  }
+}
+
+@media (max-width: 900px) {
+  .video-list {
+    max-width: calc(1 * 200px); /* Ancho máximo para mostrar 1 video a la vez */
+  }
+
+  .video-item {
+    width: 200px; /* Ancho de las miniaturas reducido a 200px */
+    height: 150px; /* Ajustar la altura según el nuevo ancho */
+    position: relative;
+    flex-shrink: 0;
+    /* Evita que los videos se encojan */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 900px) {
+  .video-item {
+    width: 300px;
+    height: 150px;
+    position: relative;
+    flex-shrink: 0;
+    /* Evita que los videos se encojan */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+}
 
 @media (max-width: 600px) {
 
-  @media (max-width: 600px) {
   .video-preview {
     width: 100vw;
     height: calc(100vw * 9 / 16); /* Mantiene la proporción 16:9 */
@@ -450,6 +450,6 @@ h1 {
     height: calc(100vw * 9 / 16); /* Mantiene la proporción 16:9 */
   }
 }
-}
+
 
 </style>

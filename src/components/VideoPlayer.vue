@@ -270,11 +270,11 @@ export default {
 /* CSS remains unchanged */
 .video-player-page {
   display: flex;
-  height: 100vh;
   background-color: #000;
   color: #fff;
   padding-left: 75px;
   padding-right: 75px;
+  height: 100vh;
 }
 
 .main-content {
@@ -294,6 +294,7 @@ export default {
   font-size: 55px;
   color: white;
   cursor: pointer;
+  z-index: 10000;
 }
 
 .close-button:hover {
@@ -308,6 +309,8 @@ export default {
   justify-content: space-between;
   box-sizing: border-box;
   position: relative;
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
 .video-and-details {
@@ -374,9 +377,10 @@ export default {
 
 .related-videos {
   width: 100%;
-  max-width: 1000px;
   margin-top: 50px;
   box-sizing: border-box;
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
 .related-videos h2 {
@@ -517,5 +521,19 @@ export default {
 .chevron {
   font-family: 'Font Awesome 5 Free';
   font-weight: 900;
+}
+
+
+
+@media (max-width: 1500px) {
+  .video-list {
+    max-width: calc(3 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
+  }
+}
+
+@media (max-width: 1200px) {
+  .video-list {
+    max-width: calc(2 * 300px); /* Ancho máximo para mostrar 2 videos a la vez */
+  }
 }
 </style>
