@@ -1,7 +1,8 @@
 <!-- HomePage -->
 <template>
   <div class="home-page">
-    <LeftSidebar />
+    <LeftSidebar class="left-sidebar" />
+    <HamburgerMenu v-if="isSmallScreen" />
     <div>
       <BackgroundVideo videoSrc="https://vimeo.com/522837592" />
       <VideoPreview id="first-video-preview" title="MUSIC VIDEOS" :videoSrc="musicVideos[0].src"
@@ -13,7 +14,7 @@
       <VideoPreview title="FILMS" :videoSrc="filmVideos[0].src" :relatedVideos="filmVideos" type="film"
         @play-video="handlePlayVideo" />
     </div>
-    <RightSidebar />
+    <RightSidebar class="right-sidebar" />
     <FooterPage />
   </div>
 </template>
@@ -24,6 +25,7 @@ import RightSidebar from './RightSidebar.vue';
 import VideoPreview from './VideoPreview.vue';
 import BackgroundVideo from './BackgroundVideo.vue';
 import FooterPage from './FooterPage.vue';
+import HamburgerMenu from './HamburgerMenu.vue';
 
 export default {
   name: 'HomePage',
@@ -32,7 +34,8 @@ export default {
     RightSidebar,
     VideoPreview,
     BackgroundVideo,
-    FooterPage
+    FooterPage,
+    HamburgerMenu
   },
   data() {
     return {
@@ -56,7 +59,8 @@ export default {
       ],
       filmVideos: [
         { id: 1, src: 'https://vimeo.com/522726870' }
-      ]
+      ],
+      isSmallScreen: window.innerWidth < 600
     };
   },
   methods: {
@@ -68,6 +72,15 @@ export default {
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       localStorage.setItem('scrollPosition', scrollPosition.toString());
     },
+    handleResize() {
+      this.isSmallScreen = window.innerWidth < 600;
+    }
+  },
+  created() {
+    window.addEventListener('resize', this.handleResize);
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
 };
 </script>
@@ -86,4 +99,12 @@ export default {
   flex: 1;
   /* Asegura que el contenido principal ocupe el espacio disponible */
 }
+
+@media (max-width: 600px) {
+  .left-sidebar,
+  .right-sidebar {
+    display: none;
+  }
+}
+
 </style>

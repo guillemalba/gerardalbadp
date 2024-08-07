@@ -224,26 +224,40 @@ h1 {
 
 @media (max-width: 1200px) {
   .video-list {
-    max-width: calc(2 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
+    max-width: calc(2 * 300px); /* Ancho máximo para mostrar 2 videos a la vez */
   }
 }
 
 @media (max-width: 900px) {
   .video-list {
-    max-width: calc(1 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
+    max-width: calc(1 * 200px); /* Ancho máximo para mostrar 1 video a la vez */
+  }
+
+  .video-item {
+    width: 200px; /* Ancho de las miniaturas reducido a 200px */
+    height: 150px; /* Ajustar la altura según el nuevo ancho */
+    position: relative;
+    flex-shrink: 0;
+    /* Evita que los videos se encojan */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
   }
 }
 
-.video-item {
-  position: relative;
-  width: 300px;
-  height: 150px;
-  flex-shrink: 0;
-  /* Evita que los videos se encojan */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
+@media (min-width: 900px) {
+  .video-item {
+    width: 300px;
+    height: 150px;
+    position: relative;
+    flex-shrink: 0;
+    /* Evita que los videos se encojan */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
 }
 
 .hover-overlay {
@@ -413,4 +427,29 @@ h1 {
   /* Ajusta según sea necesario para la posición final */
   transform: translate(-50%, 40%);
 }
+
+
+@media (max-width: 600px) {
+
+  @media (max-width: 600px) {
+  .video-preview {
+    width: 100vw;
+    height: calc(100vw * 9 / 16); /* Mantiene la proporción 16:9 */
+    min-height: auto; /* Para pantallas pequeñas, el mínimo de 800px no es necesario */
+  }
+
+  .video-list {
+    flex-direction: row;
+    max-width: 100vw;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .video-item {
+    width: 100%;
+    height: calc(100vw * 9 / 16); /* Mantiene la proporción 16:9 */
+  }
+}
+}
+
 </style>
