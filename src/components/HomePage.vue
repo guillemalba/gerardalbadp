@@ -1,17 +1,37 @@
-<!-- HomePage -->
-<template>
+<!-- HomePage --><template>
   <div class="home-page">
     <LeftSidebar class="left-sidebar" />
     <HamburgerMenu v-if="isSmallScreen" />
     <div>
       <BackgroundVideo videoSrc="https://vimeo.com/522837592" />
-      <VideoPreview id="first-video-preview" title="MUSIC VIDEOS" :videoSrc="musicVideos[0].src"
-        :relatedVideos="musicVideos" type="music" @play-video="handlePlayVideo" />
-      <VideoPreview title="COMMERCIALS" :videoSrc="commercialVideos[0].src" :relatedVideos="commercialVideos"
-        type="commercial" @play-video="handlePlayVideo" />
-      <VideoPreview title="UNDERWATER" :videoSrc="underwaterVideos[0].src" :relatedVideos="underwaterVideos"
-        type="underwater" @play-video="handlePlayVideo" />
-      <VideoPreview title="FILMS" :videoSrc="filmVideos[0].src" :relatedVideos="filmVideos" type="film"
+      <VideoPreview 
+        id="first-video-preview" 
+        title="MUSIC VIDEOS" 
+        :videoSrc="musicVideos[0].src"
+        :relatedVideos="musicVideos" 
+        type="music" 
+        :customThumbnail="musicVideoThumbnail"
+        @play-video="handlePlayVideo" />
+      <VideoPreview 
+        title="COMMERCIALS" 
+        :videoSrc="commercialVideos[0].src" 
+        :relatedVideos="commercialVideos"
+        type="commercial" 
+        :customThumbnail="commercialThumbnail"
+        @play-video="handlePlayVideo" />
+      <VideoPreview 
+        title="UNDERWATER" 
+        :videoSrc="underwaterVideos[0].src" 
+        :relatedVideos="underwaterVideos"
+        type="underwater" 
+        :customThumbnail="underwaterThumbnail"
+        @play-video="handlePlayVideo" />
+      <VideoPreview 
+        title="FILMS" 
+        :videoSrc="filmVideos[0].src" 
+        :relatedVideos="filmVideos" 
+        type="film"
+        :customThumbnail="filmThumbnail"
         @play-video="handlePlayVideo" />
     </div>
     <RightSidebar class="right-sidebar" />
@@ -62,6 +82,20 @@ export default {
       ],
       isSmallScreen: window.innerWidth < 600
     };
+  },
+  computed: {
+    musicVideoThumbnail() {
+      return require('@/assets/images/musicvideos.png');
+    },
+    commercialThumbnail() {
+      return require('@/assets/images/commercials.png');
+    },
+    underwaterThumbnail() {
+      return require('@/assets/images/underwater.png');
+    },
+    filmThumbnail() {
+      return require('@/assets/images/films.png');
+    }
   },
   methods: {
     handlePlayVideo(src, type) {

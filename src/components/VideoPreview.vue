@@ -1,5 +1,5 @@
 <template>
-  <div class="video-preview" :style="{ backgroundImage: `url(${thumbnail})` }">
+  <div class="video-preview" :style="{ backgroundImage: `url(${customThumbnail || thumbnail})` }">
     <div class="overlay">
       <h1>{{ title }}</h1>
       <CButton icon="play" :onClick="playVideo" />
@@ -70,6 +70,10 @@ export default {
     type: {
       type: String,
       required: true
+    },
+    customThumbnail: {
+      type: String,
+      default: '' // Permite que no sea obligatorio
     }
   },
   data() {
