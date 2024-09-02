@@ -52,7 +52,7 @@
                 </button>
               </div>
               <div v-if="currentVideoIndex === index" class="playing-indicator">
-                Reproduciendo
+                Playing
               </div>
             </div>
           </div>

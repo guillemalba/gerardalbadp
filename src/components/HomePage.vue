@@ -1,4 +1,5 @@
-<!-- HomePage --><template>
+<!-- HomePage -->
+<template>
   <div class="home-page">
     <LeftSidebar class="left-sidebar" />
     <HamburgerMenu v-if="isSmallScreen" />
@@ -124,14 +125,12 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
-  /* Asegura que el footer esté al final */
   background-color: rgb(0, 0, 0);
   overflow: hidden;
 }
 
-.home-page>div {
+.home-page > div {
   flex: 1;
-  /* Asegura que el contenido principal ocupe el espacio disponible */
 }
 
 @media (max-width: 600px) {
@@ -140,5 +139,4 @@ export default {
     display: none;
   }
 }
-
 </style>
