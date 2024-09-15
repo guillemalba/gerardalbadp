@@ -29,30 +29,42 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  position: relative;
+}
+
 .hamburger-button {
-  font-size: 44px;
+  font-size: 25px;
   position: fixed;
-  top: 0px;
-  right: 0px;
-  background-color: rgb(0, 0, 0);
+  top: 0;
+  right: 0;
+  background-color: rgb(98, 23, 184);
+  width: 100vw; /* Ancho del botón igual al ancho de la ventana */
   height: auto;
-  width: auto;
   padding: 10px;
   border: none;
   color: white;
   cursor: pointer;
   z-index: 3000;
+  text-align: right; /* Alinea el ícono a la derecha */
+}
+
+.hamburger-button .icon {
+  position: absolute;
+  right: 10px; /* Ajusta el margen del ícono desde el borde derecho */
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .menu {
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(103, 161, 91);
   position: fixed;
-  top: 0px;
-  right: 0;
-  width: 30%;
-  height: auto;
-  padding: 20px;
-  border-radius: 10px 0 0 10px;
+  top: 0;
+  left: 0;
+  width: 100%; /* Ancho del menú al 100% */
+  height: auto; /* Ocupa toda la altura de la ventana */
+  padding-top: 30px;
+  border-radius: 0; /* Sin bordes redondeados si quieres que se extienda por completo */
   z-index: 2000;
   display: flex;
   flex-direction: column;
@@ -65,13 +77,10 @@ export default {
   margin-top: 30px;
   width: 100%;
   text-align: center;
-  z-index: 1000;
 }
 
 .menu ul li {
   margin: 20px 0;
-  z-index: 1000;
-
 }
 
 .menu ul li a {
@@ -79,7 +88,8 @@ export default {
   text-decoration: none;
   font-size: 20px;
   font-weight: bold;
-  z-index: 1000;
-
 }
 </style>
+
+
+
