@@ -5,35 +5,56 @@
     <HamburgerMenu v-if="isSmallScreen" />
     <div>
       <BackgroundVideo videoSrc="https://vimeo.com/522837592" />
-      <VideoPreview 
-        id="first-video-preview" 
-        title="MUSIC VIDEOS" 
-        :videoSrc="musicVideos[0].src"
-        :relatedVideos="musicVideos" 
-        type="music" 
-        :customThumbnail="musicVideoThumbnail"
-        @play-video="handlePlayVideo" />
-      <VideoPreview 
-        title="COMMERCIALS" 
-        :videoSrc="commercialVideos[0].src" 
-        :relatedVideos="commercialVideos"
-        type="commercial" 
-        :customThumbnail="commercialThumbnail"
-        @play-video="handlePlayVideo" />
-      <VideoPreview 
-        title="UNDERWATER" 
-        :videoSrc="underwaterVideos[0].src" 
-        :relatedVideos="underwaterVideos"
-        type="underwater" 
-        :customThumbnail="underwaterThumbnail"
-        @play-video="handlePlayVideo" />
-      <VideoPreview 
-        title="FILMS" 
-        :videoSrc="filmVideos[0].src" 
-        :relatedVideos="filmVideos" 
-        type="film"
-        :customThumbnail="filmThumbnail"
-        @play-video="handlePlayVideo" />
+      <!-- Detectamos si es una pantalla pequeña y mostramos el carousel -->
+      <div v-if="isSmallScreen">
+        <VideoCarousel 
+          title="MUSIC VIDEOS" 
+          :relatedVideos="musicVideos" 
+          type="music" 
+          @play-video="handlePlayVideo" />
+        <VideoCarousel 
+          title="COMMERCIALS" 
+          :relatedVideos="commercialVideos"
+          type="commercial" 
+          @play-video="handlePlayVideo" />
+        <VideoCarousel 
+          title="UNDERWATER" 
+          :relatedVideos="underwaterVideos"
+          type="underwater" 
+          @play-video="handlePlayVideo" />
+        <VideoCarousel 
+          title="FILMS" 
+          :relatedVideos="filmVideos" 
+          type="film"
+          @play-video="handlePlayVideo" />
+      </div>
+      <!-- Vista original para pantallas grandes -->
+      <div v-else>
+        <VideoPreview 
+          title="MUSIC VIDEOS" 
+          :videoSrc="musicVideos[0].src"
+          :relatedVideos="musicVideos" 
+          type="music" 
+          @play-video="handlePlayVideo" />
+        <VideoPreview 
+          title="COMMERCIALS" 
+          :videoSrc="commercialVideos[0].src" 
+          :relatedVideos="commercialVideos"
+          type="commercial" 
+          @play-video="handlePlayVideo" />
+        <VideoPreview 
+          title="UNDERWATER" 
+          :videoSrc="underwaterVideos[0].src" 
+          :relatedVideos="underwaterVideos"
+          type="underwater" 
+          @play-video="handlePlayVideo" />
+        <VideoPreview 
+          title="FILMS" 
+          :videoSrc="filmVideos[0].src" 
+          :relatedVideos="filmVideos" 
+          type="film"
+          @play-video="handlePlayVideo" />
+      </div>
     </div>
     <RightSidebar class="right-sidebar" />
     <FooterPage />
@@ -47,6 +68,7 @@ import VideoPreview from './VideoPreview.vue';
 import BackgroundVideo from './BackgroundVideo.vue';
 import FooterPage from './FooterPage.vue';
 import HamburgerMenu from './HamburgerMenu.vue';
+import VideoCarousel from './VideoCarousel.vue';
 
 export default {
   name: 'HomePage',
@@ -56,7 +78,8 @@ export default {
     VideoPreview,
     BackgroundVideo,
     FooterPage,
-    HamburgerMenu
+    HamburgerMenu,
+    VideoCarousel // Añadido para la vista de acordeón
   },
   data() {
     return {
