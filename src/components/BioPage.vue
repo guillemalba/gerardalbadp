@@ -42,7 +42,7 @@
     background-color: rgb(0, 0, 0);
     color: white;
     height: 100vh;
-    background-image: url('@/assets/images/bio_profile.jpeg');
+    background-image: url('@/assets/images/bio_profile.png');
     background-size: cover;
     background-position: center;
     overflow: hidden;
