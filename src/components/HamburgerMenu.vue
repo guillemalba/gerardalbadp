@@ -34,11 +34,11 @@ export default {
 }
 
 .hamburger-button {
-  font-size: 25px;
+  font-size: 20px;
   position: fixed;
   top: 0;
   right: 0;
-  background-color: rgb(98, 23, 184);
+  background-color: rgb(0, 0, 0);
   width: 100vw; /* Ancho del botón igual al ancho de la ventana */
   height: auto;
   padding: 10px;
@@ -57,7 +57,7 @@ export default {
 }
 
 .menu {
-  background-color: rgb(103, 161, 91);
+  background-color: rgb(0, 0, 0);
   position: fixed;
   top: 0;
   left: 0;

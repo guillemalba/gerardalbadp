@@ -1,3 +1,4 @@
+<!-- VideoPreview.vue -->
 <template>
   <div class="video-preview" :style="{ backgroundImage: `url(${customThumbnail || thumbnail})` }">
     <div class="overlay">
