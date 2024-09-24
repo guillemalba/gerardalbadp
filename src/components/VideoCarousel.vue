@@ -1,6 +1,15 @@
 <template>
   <div class="carousel-container">
-    <h2>{{ title }}</h2>
+    <!-- Encabezado del carrusel -->
+    <div class="carousel-header">
+      <h2>{{ title }}</h2>
+
+      <!-- Botón de cierre en la cabecera, solo cuando el video está en reproducción -->
+      <button v-if="isPlaying" class="close-button-header" @click="closeVideo">
+        &times;
+      </button>
+    </div>
+
     <div 
       class="carousel" 
       @touchstart="handleTouchStart" 
@@ -19,39 +28,48 @@
           class="carousel-slide">
           
           <!-- Si es el video actual y está en reproducción, mostramos el reproductor -->
-          <div class="video-container">
-            <iframe
-              v-if="isPlaying && currentIndex === index"
-              :src="getEmbedUrl(video.src)"
-              width="100%"
-              height="100%"
-              frameborder="0"
-              allow="autoplay; fullscreen; picture-in-picture"
-              allowfullscreen
-            ></iframe>
+          <div class="video-container-wrapper">
+            <div class="video-container">
+              <iframe
+                v-if="isPlaying && currentIndex === index"
+                :src="getEmbedUrl(video.src)"
+                width="100%"
+                height="100%"
+                frameborder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowfullscreen
+              ></iframe>
 
-            <!-- Si no se está reproduciendo, mostramos la miniatura -->
-            <div 
-              v-else 
-              class="thumbnail" 
-              :style="{ backgroundImage: `url(${video.thumbnail || defaultThumbnail})` }"
-              @click="playVideo(index)">
-              <div class="overlay">
-                <button class="play-button">
-                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="white"
-                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                  </svg>
-                </button>
-              </div>
-              <div class="video-info">
-                <p>{{ video.title }} / {{ video.duration }}</p>
+              <!-- Si no se está reproduciendo, mostramos la miniatura -->
+              <div 
+                v-else 
+                class="thumbnail" 
+                :style="{ backgroundImage: `url(${video.thumbnail || defaultThumbnail})` }"
+                @click="playVideo(index)">
+                
+                <div class="overlay">
+                  <!-- El título del video centrado encima del botón de play -->
+                  <div class="video-info">
+                    <p>{{ video.title }} / {{ video.duration }}</p>
+                  </div>
+                  
+                  <!-- Botón de play debajo del título -->
+                  <button class="play-button">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="white"
+                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                  </button>
+                </div>
+                
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+
     
     <!-- Dots para indicar el video actual -->
     <div class="carousel-dots">
@@ -62,6 +80,9 @@
         @click="goToSlide(index)">
       </span>
     </div>
+
+    <!-- Separador entre secciones -->
+    <hr class="section-separator" />
   </div>
 </template>
 
@@ -151,6 +172,9 @@ export default {
     playVideo(index) {
       this.currentIndex = index;
       this.isPlaying = true; // Iniciar la reproducción en el slide actual
+    },
+    closeVideo() {
+      this.isPlaying = false; // Cerrar el reproductor y volver a mostrar la miniatura
     }
   }
 };
@@ -161,6 +185,34 @@ export default {
   position: relative;
   width: 100%;
   overflow: hidden;
+}
+
+.carousel-header {
+  display: flex;
+  justify-content: center; /* Centrar el texto */
+  align-items: center;
+  position: relative; /* Para colocar el botón de cierre con position absolute */
+  padding: 20px;
+  background-color: #000000;
+  color: white;
+}
+
+.carousel-header h2 {
+  margin: 0;
+  position: absolute; /* Mantener el título centrado */
+  left: 50%;
+  transform: translateX(-50%); /* Asegura que el título esté perfectamente centrado */
+}
+
+.close-button-header {
+  background-color: rgba(255, 0, 0, 0);
+  border: none;
+  color: white;
+  font-size: 35px;
+  cursor: pointer;
+  z-index: 10;
+  position: absolute;
+  right: 10px; /* Colocar el botón a la derecha */
 }
 
 .carousel {
@@ -182,13 +234,19 @@ export default {
   align-items: center;
 }
 
-.video-container {
+/* Proporción 16:9 para el video y la miniatura */
+.video-container-wrapper {
   width: 100%;
-  height: 300px; /* Asegúrate de que este tamaño sea el mismo para las miniaturas y los videos */
+  padding-top: 56.25%; /* Proporción de 16:9 (9 / 16 = 0.5625) */
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+}
+
+.video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .thumbnail {
@@ -217,27 +275,26 @@ export default {
   background-color: rgba(0, 0, 0, 0);
   border: none;
   color: white;
-  font-size: 48px;
+  font-size: 38px;
   cursor: pointer;
+  margin-top: 10px; /* Espacio entre el título y el botón */
 }
 
 .play-button .icon {
-  width: 48px;
-  height: 48px;
+  width: 38px;
+  height: 38px;
 }
 
 .video-info {
   color: white;
   text-align: center;
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  margin-bottom: 10px; /* Espacio entre el título y el botón */
 }
 
 .carousel-dots {
   text-align: center;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .carousel-dots span {
@@ -252,5 +309,12 @@ export default {
 
 .carousel-dots .active {
   background-color: #333;
+}
+
+/* Separador sutil entre secciones */
+.section-separator {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Color sutil para la línea */
+  width: 100%;
 }
 </style>

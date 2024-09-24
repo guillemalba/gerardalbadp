@@ -403,7 +403,7 @@ h1 {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .video-list {
     max-width: calc(1 * 200px); /* Ancho máximo para mostrar 1 video a la vez */
   }
@@ -421,7 +421,7 @@ h1 {
   }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1000px) {
   .video-item {
     width: 300px;
     height: 150px;
@@ -435,7 +435,7 @@ h1 {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
 
   .video-preview {
     width: 100vw;

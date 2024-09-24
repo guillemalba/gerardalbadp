@@ -104,7 +104,7 @@ export default {
       filmVideos: [
         { id: 1, src: 'https://vimeo.com/522726870' }
       ],
-      isSmallScreen: window.innerWidth < 600
+      isSmallScreen: window.innerWidth < 1000
     };
   },
   computed: {
@@ -131,7 +131,7 @@ export default {
       localStorage.setItem('scrollPosition', scrollPosition.toString());
     },
     handleResize() {
-      this.isSmallScreen = window.innerWidth < 600;
+      this.isSmallScreen = window.innerWidth < 1000;
     }
   },
   created() {
@@ -156,7 +156,7 @@ export default {
   flex: 1;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 1000px) {
   .left-sidebar,
   .right-sidebar {
     display: none;
