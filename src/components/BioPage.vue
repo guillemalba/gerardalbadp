@@ -66,15 +66,12 @@
   h1 {
     margin-bottom: 20px;
     font-size: 2.5em;
-    font-weight: bold;
-    font-family: 'Arial', sans-serif;
   }
   
   p {
     margin-bottom: 20px;
     font-size: 1.2em;
     line-height: 1.6;
-    font-family: 'Arial', sans-serif;
   }
   
   button {

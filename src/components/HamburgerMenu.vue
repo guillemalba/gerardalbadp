@@ -87,7 +87,6 @@ export default {
   color: white;
   text-decoration: none;
   font-size: 20px;
-  font-weight: bold;
 }
 </style>
 

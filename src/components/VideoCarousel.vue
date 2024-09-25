@@ -45,18 +45,18 @@
                 v-else 
                 class="thumbnail" 
                 :style="{ backgroundImage: `url(${video.thumbnail || defaultThumbnail})` }"
-                @click="playVideo(index)">
+                @click="goToMobileVideoDetail(video)">
                 
                 <div class="overlay">
                   <!-- El título del video centrado encima del botón de play, ahora clickeable -->
                   <div class="video-info">
-                    <p class="clickable" @click="goToMobileVideoDetail(video)">
+                    <p class="clickable">
                       {{ video.title }}
                     </p>
                   </div>
                   
                   <!-- Botón de play debajo del título -->
-                  <button class="play-button">
+                  <button class="play-button" @click.stop="playVideo(index)">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="white"
                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <polygon points="5 3 19 12 5 21 5 3"></polygon>

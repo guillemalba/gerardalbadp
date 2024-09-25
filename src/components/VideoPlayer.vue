@@ -429,7 +429,6 @@ export default {
   justify-content: center;
   color: white;
   font-size: 20px;
-  font-weight: bold;
 }
 
 .hover-overlay {

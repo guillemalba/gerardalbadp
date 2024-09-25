@@ -38,7 +38,6 @@
     background-color: #0000001b;
     color: #ffffff;
     font-size: 16px;
-    font-weight: bold;
     cursor: pointer;
     border: 1px solid white; /* Added white border */
     border-radius: 15px;
