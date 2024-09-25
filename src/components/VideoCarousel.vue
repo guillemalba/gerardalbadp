@@ -94,7 +94,7 @@ export default {
       touchStartX: 0,  // Coordenada inicial del toque
       mouseStartX: 0,  // Coordenada inicial del mouse (para dispositivos con ratón)
       isPlaying: false, // Indicador para saber si el video está en reproducción
-      defaultThumbnail: require('@/assets/images/bio_profile.png') // Imagen por defecto si el thumbnail no carga
+      defaultThumbnail: require('@/assets/images/black.png') // Imagen por defecto si el thumbnail no carga
     };
   },
   props: {
@@ -203,7 +203,7 @@ export default {
   justify-content: center; /* Centrar el texto */
   align-items: center;
   position: relative; /* Para colocar el botón de cierre con position absolute */
-  padding: 20px;
+  padding: 25px;
   background-color: #000000;
   color: white;
 }

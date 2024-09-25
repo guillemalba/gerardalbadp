@@ -65,6 +65,7 @@
     },
     created() {
       this.fetchVideoDetails();
+      window.scrollTo(0, 0); // Esto asegura que el scroll esté arriba de todo
     },
     methods: {
       async fetchVideoDetails() {
