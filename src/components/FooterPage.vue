@@ -8,7 +8,6 @@
         <p><a :href="'mailto:' + email">{{ email }}</a></p>
       </div>
       <div class="social-media">
-        <h2>Follow Me</h2>
         <div class="social-icons">
           <a :href="'https://instagram.com/' + instagramUsername" target="_blank" rel="noopener noreferrer">
             <img :src="instagramIcon" alt="Instagram" class="social-icon">

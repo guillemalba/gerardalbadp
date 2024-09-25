@@ -48,9 +48,11 @@
                 @click="playVideo(index)">
                 
                 <div class="overlay">
-                  <!-- El título del video centrado encima del botón de play -->
+                  <!-- El título del video centrado encima del botón de play, ahora clickeable -->
                   <div class="video-info">
-                    <p>{{ video.title }} / {{ video.duration }}</p>
+                    <p class="clickable" @click="goToMobileVideoDetail(video)">
+                      {{ video.title }}
+                    </p>
                   </div>
                   
                   <!-- Botón de play debajo del título -->
@@ -69,8 +71,6 @@
       </div>
     </div>
 
-
-    
     <!-- Dots para indicar el video actual -->
     <div class="carousel-dots">
       <span 
@@ -105,6 +105,16 @@ export default {
     this.fetchThumbnailsForRelatedVideos(); // Asegurarse de cargar los thumbnails en la inicialización
   },
   methods: {
+    goToMobileVideoDetail(video) {
+      // Navegar a la página de detalles del video, usando el ID y el título de la sección en la ruta
+      this.$router.push({
+        name: 'MobileVideoDetail',
+        params: {
+          id: video.src.split('/').pop(), // Extraemos el ID del video desde la URL de Vimeo
+          sectionTitle: this.title.replace(/\s+/g, '-') // Reemplazar espacios con guiones para la URL
+        }
+      });
+    },
     async fetchThumbnailsForRelatedVideos() {
       // Este método obtiene los thumbnails para cada video
       for (const video of this.relatedVideos) {
@@ -181,6 +191,7 @@ export default {
 </script>
 
 <style scoped>
+/* Estilos para VideoCarousel */
 .carousel-container {
   position: relative;
   width: 100%;
@@ -289,6 +300,13 @@ export default {
   color: white;
   text-align: center;
   margin-bottom: 10px; /* Espacio entre el título y el botón */
+  cursor: pointer;
+}
+
+.clickable {
+  cursor: pointer;
+  text-decoration: underline;
+  z-index: 10000;
 }
 
 .carousel-dots {
@@ -299,8 +317,8 @@ export default {
 
 .carousel-dots span {
   display: inline-block;
-  height: 10px;
-  width: 10px;
+  height: 7px;
+  width: 7px;
   border-radius: 50%;
   background-color: #ddd;
   margin: 0 5px;

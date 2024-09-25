@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from './components/HomePage.vue';
-import VideoPlayer from './components/VideoPlayer.vue'; // Importa el nuevo componente
+import VideoPlayer from './components/VideoPlayer.vue';
 import BioPage from './components/BioPage.vue';
-import MobileVideoDetail from '@/components/MobileVideoDetail.vue';
-
+import MobileVideoDetail from './components/MobileVideoDetail.vue';
 
 const routes = [
   {
@@ -12,10 +11,10 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/video', // Nueva ruta
+    path: '/video',
     name: 'VideoPlayer',
     component: VideoPlayer,
-    props: route => ({ videoSrc: route.query.videoSrc }) // Pasar videoSrc como prop
+    props: route => ({ videoSrc: route.query.videoSrc })
   },
   {
     path: '/bio',
@@ -23,10 +22,13 @@ const routes = [
     component: BioPage
   },
   {
-    path: '/video-detail',
+    path: '/video-detail/:sectionTitle/:id', // Usamos tanto sectionTitle como id en la URL
     name: 'MobileVideoDetail',
     component: MobileVideoDetail,
-    props: (route) => ({ video: route.params.video, sectionTitle: route.params.sectionTitle })
+    props: route => ({
+      videoId: route.params.id,
+      sectionTitle: route.params.sectionTitle // Ahora pasamos el sectionTitle como parámetro de la ruta
+    })
   }
 ];
 
