@@ -6,7 +6,11 @@
 
       <!-- Botón de cierre en la cabecera, solo cuando el video está en reproducción -->
       <button v-if="isPlaying" class="close-button-header" @click="closeVideo">
-        &times;
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="35" height="35" fill="none" stroke="white"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
       </button>
     </div>
 
@@ -85,6 +89,7 @@
     <hr class="section-separator" />
   </div>
 </template>
+
 
 <script>
 export default {
@@ -223,7 +228,7 @@ export default {
   cursor: pointer;
   z-index: 10;
   position: absolute;
-  right: 10px; /* Colocar el botón a la derecha */
+  right: 0px; /* Colocar el botón a la derecha */
 }
 
 .carousel {
