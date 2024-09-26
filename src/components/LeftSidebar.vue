@@ -1,4 +1,3 @@
-<!-- LeftSidebar -->
 <template>
   <div class="left-sidebar">
     <!-- Contenido del Left Sidebar -->
@@ -13,10 +12,12 @@ export default {
   name: 'LeftSidebar',
   methods: {
     goToHome() {
+      // Redirige a la página de inicio
       this.$router.push({ name: 'Home' });
       this.scrollToTop();
     },
     scrollToTop() {
+      // Desplazarse al principio de la página
       this.$nextTick(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });

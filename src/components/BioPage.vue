@@ -1,10 +1,14 @@
 <template>
   <div class="bio-page">
     <!-- Mostramos el HamburguerMenu si es pantalla pequeña -->
-    <HamburgerMenu v-if="isSmallScreen" />
+    <HamburgerMenu 
+      v-if="isSmallScreen" 
+      @scrollToWork="goToWorkFromBio" 
+      @scrollToContact="goToContactFromBio" 
+    />
     
     <!-- Si no es pantalla pequeña, mostramos las barras laterales -->
-    <LeftSidebar v-else class="left-sidebar" />
+    <LeftSidebar v-else class="left-sidebar" @navigateWork="goToWorkFromBio" @navigateContact="goToContactFromBio" />
     
     <div class="content-container">
       <div class="content">
@@ -29,7 +33,7 @@
     </div>
 
     <!-- Si no es pantalla pequeña, mostramos las barras laterales -->
-    <RightSidebar v-if="!isSmallScreen" class="right-sidebar" />
+    <RightSidebar v-if="!isSmallScreen" class="right-sidebar" @navigateWork="goToWorkFromBio" @navigateContact="goToContactFromBio" />
   </div>
 </template>
 
@@ -59,6 +63,14 @@ export default {
     },
     handleResize() {
       this.isSmallScreen = window.innerWidth < 1000; // Actualizar si es pantalla pequeña o grande
+    },
+    goToWorkFromBio() {
+      // Redirige a la página de inicio con el parámetro `scroll=work`
+      this.$router.push({ name: 'Home', query: { scroll: 'work' } });
+    },
+    goToContactFromBio() {
+      // Redirige a la página de inicio con el parámetro `scroll=contact`
+      this.$router.push({ name: 'Home', query: { scroll: 'contact' } });
     }
   },
   created() {

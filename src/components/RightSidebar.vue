@@ -1,4 +1,3 @@
-<!-- RightSIdebar -->
 <template>
   <div class="right-sidebar">
     <!-- Contenido del Right Sidebar -->
@@ -16,27 +15,16 @@ export default {
   methods: {
     goToSection(section) {
       if (section === 'work') {
-        this.$router.push({ name: 'Home' });
-        this.scrollToElement('#first-video-preview');
+        // Redirige a la página de inicio con el parámetro de consulta `scroll=work`
+        this.$router.push({ name: 'Home', query: { scroll: 'work' } });
       } else if (section === 'bio') {
+        // Redirige a la página de biografía
         this.$router.push({ name: 'Bio' });
       }
     },
     goToFooter() {
-      this.$nextTick(() => {
-        const footer = document.querySelector('footer');
-        if (footer) {
-          footer.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    },
-    scrollToElement(selector) {
-      this.$nextTick(() => {
-        const element = document.querySelector(selector);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
+      // Redirige a la página de inicio con el parámetro de consulta `scroll=contact`
+      this.$router.push({ name: 'Home', query: { scroll: 'contact' } });
     }
   }
 };
@@ -87,4 +75,3 @@ export default {
   }
 }
 </style>
-

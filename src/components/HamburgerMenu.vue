@@ -3,11 +3,11 @@
     <button @click="toggleMenu" class="hamburger-button">
       ☰
     </button>
-    <div v-if="isMenuOpen" class="menu">
+    <div v-if="isMenuOpen" class="menu" ref="menu">
       <ul>
-        <li><a href="#">Work</a></li>
-        <li><a href="#">Bio</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="#" @click.prevent="scrollToSection('work')">Work</a></li>
+        <li><a href="#" @click.prevent="goToBio">Bio</a></li>
+        <li><a href="#" @click.prevent="scrollToSection('contact')">Contact</a></li>
       </ul>
     </div>
   </div>
@@ -23,37 +23,60 @@ export default {
   methods: {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
+
+      if (this.isMenuOpen) {
+        // Agregar evento click al documento para cerrar el menú si se hace clic fuera
+        document.addEventListener('click', this.handleClickOutside);
+      } else {
+        // Eliminar el evento click al cerrar el menú
+        document.removeEventListener('click', this.handleClickOutside);
+      }
+    },
+    scrollToSection(section) {
+      this.toggleMenu(); // Cierra el menú después de hacer clic
+      if (section === 'work') {
+        // Desplázate a la sección de "Music Videos" en la página principal
+        this.$emit('scrollToWork');
+      } else if (section === 'contact') {
+        // Desplázate a la sección de contacto (footer)
+        this.$emit('scrollToContact');
+      }
+    },
+    goToBio() {
+      this.toggleMenu(); // Cierra el menú después de hacer clic
+      // Redirige a la página de Bio
+      this.$router.push({ name: 'Bio' });
+    },
+    handleClickOutside(event) {
+      // Verifica si el clic fue fuera del menú hamburguesa
+      const menu = this.$refs.menu;
+      if (menu && !menu.contains(event.target) && !event.target.classList.contains('hamburger-button')) {
+        this.isMenuOpen = false;
+        document.removeEventListener('click', this.handleClickOutside); // Elimina el evento
+      }
     }
+  },
+  beforeUnmount() {
+    // Asegúrate de eliminar el listener si el componente se desmonta
+    document.removeEventListener('click', this.handleClickOutside);
   }
 };
 </script>
 
 <style scoped>
-.container {
-  position: relative;
-}
-
 .hamburger-button {
   font-size: 20px;
   position: fixed;
   top: 0;
   right: 0;
   background-color: rgb(0, 0, 0);
-  width: 100vw; /* Ancho del botón igual al ancho de la ventana */
-  height: auto;
+  width: 100vw;
   padding: 10px;
   border: none;
   color: white;
   cursor: pointer;
   z-index: 3000;
-  text-align: right; /* Alinea el ícono a la derecha */
-}
-
-.hamburger-button .icon {
-  position: absolute;
-  right: 10px; /* Ajusta el margen del ícono desde el borde derecho */
-  top: 50%;
-  transform: translateY(-50%);
+  text-align: right;
 }
 
 .menu {
@@ -61,10 +84,8 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%; /* Ancho del menú al 100% */
-  height: auto; /* Ocupa toda la altura de la ventana */
+  width: 100%;
   padding-top: 30px;
-  border-radius: 0; /* Sin bordes redondeados si quieres que se extienda por completo */
   z-index: 2000;
   display: flex;
   flex-direction: column;
@@ -89,6 +110,3 @@ export default {
   font-size: 20px;
 }
 </style>
-
-
-
