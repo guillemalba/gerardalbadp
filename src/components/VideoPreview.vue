@@ -317,18 +317,13 @@ h1 {
 .custom-button {
   margin: 10px 0;
   padding: 12px 24px;
-  background-color: #0000001b;
+  background-color: #00000000;
   color: #ffffff;
   font-size: 16px;
-  font-weight: bold;
   cursor: pointer;
-  border: 1px solid white; /* Added white border */
-  border-radius: 200px; /* Puedes ajustar el valor según tus preferencias */
-  transition: all 0.3s ease;
+  border: none; /* Added white border */
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
   text-transform: uppercase;
   z-index: 1000;
   white-space: nowrap; /* Ensure the button content stays in a single line */
@@ -345,9 +340,7 @@ h1 {
 }
 
 .custom-button:hover {
-  color: #ffffff;
-  border: 1px solid #ffffff;
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+  font-size: 20px;
 }
 
 /* Ocultar la barra de desplazamiento en diferentes navegadores */
@@ -363,25 +356,13 @@ h1 {
   /* Ocultar en Firefox */
 }
 
-/* Animación de deslizamiento */
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.5s ease;
-}
-
-.slide-fade-enter,
-.slide-fade-leave-to {
-  transform: translateY(10px);
-  opacity: 0;
-}
-
 .toggle-button {
   position: absolute;
   bottom: 10px;
   /* Ajusta según sea necesario para la posición inicial */
   left: 50%;
   transform: translateX(-50%);
-  transition: all 0.5s ease;
+  transition: all 0.2s ease;
 }
 
 .toggle-button.moved-up {
