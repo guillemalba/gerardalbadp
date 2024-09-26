@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router'; // Cambia a hash history
 import HomePage from './components/HomePage.vue';
 import VideoPlayer from './components/VideoPlayer.vue';
 import BioPage from './components/BioPage.vue';
@@ -22,18 +22,18 @@ const routes = [
     component: BioPage
   },
   {
-    path: '/video-detail/:sectionTitle/:id', // Usamos tanto sectionTitle como id en la URL
+    path: '/video-detail/:sectionTitle/:id',
     name: 'MobileVideoDetail',
     component: MobileVideoDetail,
     props: route => ({
       videoId: route.params.id,
-      sectionTitle: route.params.sectionTitle // Ahora pasamos el sectionTitle como parámetro de la ruta
+      sectionTitle: route.params.sectionTitle
     })
   }
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(), // Usar hash history en lugar de web history
   routes,
 });
 
