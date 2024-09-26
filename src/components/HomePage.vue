@@ -150,6 +150,7 @@ export default {
   flex-direction: column;
   background-color: rgb(0, 0, 0);
   overflow: hidden;
+  scrollbar-color: rgb(0, 47, 255) black;
 }
 
 .home-page > div {

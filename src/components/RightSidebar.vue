@@ -3,9 +3,9 @@
   <div class="right-sidebar">
     <!-- Contenido del Right Sidebar -->
     <div class="vertical-text">
-      <h2 @click="goToSection('work')">Work</h2>
-      <h2 @click="goToSection('bio')">Bio</h2>
       <h2 @click="goToFooter">Contact</h2>
+      <h2 @click="goToSection('bio')">Bio</h2>
+      <h2 @click="goToSection('work')">Work</h2>
     </div>
   </div>
 </template>
@@ -70,7 +70,21 @@ export default {
 }
 
 .vertical-text h2 {
-  margin-bottom: 170px;
+  margin-bottom: 15vh;
   writing-mode: vertical-rl;
+  transition: font-size 0.3s ease; /* Transición suave al cambiar tamaño */
+}
+
+@media (max-width: 1000px) {
+  .vertical-text h2 {
+    margin-bottom: 10vh; /* Reducimos el espacio entre los textos */
+  }
+}
+
+@media (max-width: 600px) {
+  .vertical-text h2 {
+    margin-bottom: 8vh; /* Reducimos el espacio entre textos en pantallas muy pequeñas */
+  }
 }
 </style>
+

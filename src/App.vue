@@ -33,6 +33,8 @@ html, body {
   background-color: #000;
   margin: 0;
   padding: 0;
+  scrollbar-color: rgb(48, 48, 48) rgb(0, 0, 0);
+  /* scrollbar-width: none; */
 }
 
 .left-sidebar, .right-sidebar {
