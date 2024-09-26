@@ -1,7 +1,7 @@
 <!-- VideoPreview.vue -->
 <template>
-  <div class="video-preview" :style="{ backgroundImage: `url(${customThumbnail || thumbnail})` }">
-    <div class="overlay">
+<div class="video-preview" :style="{ backgroundImage: `url(${customThumbnail || thumbnail})` }">
+      <div class="overlay">
       <h1>{{ title }}</h1>
       <CButton icon="play" :onClick="playVideo" />
     </div>

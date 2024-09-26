@@ -31,29 +31,34 @@
       <!-- Vista original para pantallas grandes -->
       <div v-else>
         <VideoPreview 
-          title="MUSIC VIDEOS" 
-          :videoSrc="musicVideos[0].src"
-          :relatedVideos="musicVideos" 
-          type="music" 
-          @play-video="handlePlayVideo" />
-        <VideoPreview 
-          title="COMMERCIALS" 
-          :videoSrc="commercialVideos[0].src" 
-          :relatedVideos="commercialVideos"
-          type="commercial" 
-          @play-video="handlePlayVideo" />
-        <VideoPreview 
-          title="UNDERWATER" 
-          :videoSrc="underwaterVideos[0].src" 
-          :relatedVideos="underwaterVideos"
-          type="underwater" 
-          @play-video="handlePlayVideo" />
-        <VideoPreview 
-          title="FILMS" 
-          :videoSrc="filmVideos[0].src" 
-          :relatedVideos="filmVideos" 
-          type="film"
-          @play-video="handlePlayVideo" />
+        id="first-video-preview" 
+        title="MUSIC VIDEOS" 
+        :videoSrc="musicVideos[0].src"
+        :relatedVideos="musicVideos" 
+        type="music" 
+        :customThumbnail="musicVideoThumbnail"
+        @play-video="handlePlayVideo" />
+      <VideoPreview 
+        title="COMMERCIALS" 
+        :videoSrc="commercialVideos[0].src" 
+        :relatedVideos="commercialVideos"
+        type="commercial" 
+        :customThumbnail="commercialThumbnail"
+        @play-video="handlePlayVideo" />
+      <VideoPreview 
+        title="UNDERWATER" 
+        :videoSrc="underwaterVideos[0].src" 
+        :relatedVideos="underwaterVideos"
+        type="underwater" 
+        :customThumbnail="underwaterThumbnail"
+        @play-video="handlePlayVideo" />
+      <VideoPreview 
+        title="FILMS" 
+        :videoSrc="filmVideos[0].src" 
+        :relatedVideos="filmVideos" 
+        type="film"
+        :customThumbnail="filmThumbnail"
+        @play-video="handlePlayVideo" />
       </div>
     </div>
     <RightSidebar class="right-sidebar" />
@@ -86,7 +91,8 @@ export default {
       musicVideos: [
         { id: 1, src: 'https://vimeo.com/522564568' },
         { id: 2, src: 'https://vimeo.com/522377522' },
-        { id: 3, src: 'https://vimeo.com/491834523' }
+        { id: 3, src: 'https://vimeo.com/491834523' },
+        { id: 4, src: 'https://vimeo.com/1005402186' }
       ],
       commercialVideos: [
         { id: 1, src: 'https://vimeo.com/290744844' },

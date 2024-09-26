@@ -150,7 +150,8 @@ export default {
         this.relatedVideos = [
           { id: 1, src: 'https://vimeo.com/522564568', thumbnail: '', title: '', duration: '' },
           { id: 2, src: 'https://vimeo.com/522377522', thumbnail: '', title: '', duration: '' },
-          { id: 3, src: 'https://vimeo.com/491834523', thumbnail: '', title: '', duration: '' }
+          { id: 3, src: 'https://vimeo.com/491834523', thumbnail: '', title: '', duration: '' },
+          { id: 4, src: 'https://vimeo.com/1005402186', thumbnail: '', title: '', duration: '' }
         ];
       } else if (videoType === 'commercial') {
         this.relatedVideos = [
