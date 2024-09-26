@@ -268,14 +268,14 @@ h1 {
 
 .arrow {
   cursor: pointer;
-  color: white;
+  color: rgb(255, 255, 255);
   font-size: 2em;
   user-select: none;
   padding: 0 10px;
 }
 
 .arrow:hover {
-  color: #ccc;
+  color: yellow;
 }
 
 .arrow-container {
@@ -335,12 +335,19 @@ h1 {
   height: 25px;
 }
 
+/* Estilo del botón personalizado */
+.custom-button:hover .icon {
+  stroke: yellow; /* Cambia el color del icono a amarillo en hover */
+}
+
+
 .custom-button span {
   margin-left: 8px; /* Add some spacing between the icon and the text */
 }
 
 .custom-button:hover {
-  font-size: 20px;
+  /* font-size: 20px; */
+  color: yellow;
 }
 
 /* Ocultar la barra de desplazamiento en diferentes navegadores */
@@ -362,7 +369,7 @@ h1 {
   /* Ajusta según sea necesario para la posición inicial */
   left: 50%;
   transform: translateX(-50%);
-  transition: all 0.2s ease;
+  /* transition: all 0.2s ease; */
 }
 
 .toggle-button.moved-up {
@@ -370,6 +377,7 @@ h1 {
   top: 71%;
   /* Ajusta según sea necesario para la posición final */
   transform: translate(-50%, 40%);
+  /* transition: all 0.5s ease; */
 }
 
 @media (max-width: 1500px) {

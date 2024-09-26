@@ -132,7 +132,7 @@ p {
 
 button {
   padding: 12px 24px;
-  background-color: #ffdd57; /* Amarillo clarito */
+  background-color: #ffffff; /* Amarillo clarito */
   color: #000000;
   border: none;
   border-radius: 50px;
@@ -142,7 +142,7 @@ button {
 }
 
 button:hover {
-  background-color: #ffc107; /* Amarillo más fuerte en hover */
+  background-color: yellow; /* Amarillo más fuerte en hover */
 }
 
 /* Estilos para la imagen de perfil */

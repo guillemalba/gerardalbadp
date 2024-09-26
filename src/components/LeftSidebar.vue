@@ -54,5 +54,11 @@ export default {
 .vertical-text h2 {
   margin: 0; /* Elimina el margen para centrar el texto */
   cursor: pointer;
+  color: white; /* Texto blanco por defecto */
+  transition: color 0.3s ease; /* Transición suave de color */
+}
+
+.vertical-text h2:hover {
+  color: yellow; /* Cambiar a texto amarillo al hacer hover */
 }
 </style>

@@ -1,8 +1,13 @@
 <template>
   <div>
+    <!-- Icono de menú hamburguesa -->
     <button @click="toggleMenu" class="hamburger-button">
-      ☰
+      <div class="bar" :class="{ 'open': isMenuOpen }"></div>
+      <div class="bar" :class="{ 'open': isMenuOpen }"></div>
+      <div class="bar" :class="{ 'open': isMenuOpen }"></div>
     </button>
+
+    <!-- Menú desplegable -->
     <div v-if="isMenuOpen" class="menu" ref="menu">
       <ul>
         <li><a href="#" @click.prevent="scrollToSection('work')">Work</a></li>
@@ -35,29 +40,24 @@ export default {
     scrollToSection(section) {
       this.toggleMenu(); // Cierra el menú después de hacer clic
       if (section === 'work') {
-        // Desplázate a la sección de "Music Videos" en la página principal
         this.$emit('scrollToWork');
       } else if (section === 'contact') {
-        // Desplázate a la sección de contacto (footer)
         this.$emit('scrollToContact');
       }
     },
     goToBio() {
       this.toggleMenu(); // Cierra el menú después de hacer clic
-      // Redirige a la página de Bio
       this.$router.push({ name: 'Bio' });
     },
     handleClickOutside(event) {
-      // Verifica si el clic fue fuera del menú hamburguesa
       const menu = this.$refs.menu;
       if (menu && !menu.contains(event.target) && !event.target.classList.contains('hamburger-button')) {
         this.isMenuOpen = false;
-        document.removeEventListener('click', this.handleClickOutside); // Elimina el evento
+        document.removeEventListener('click', this.handleClickOutside);
       }
     }
   },
   beforeUnmount() {
-    // Asegúrate de eliminar el listener si el componente se desmonta
     document.removeEventListener('click', this.handleClickOutside);
   }
 };
@@ -65,22 +65,43 @@ export default {
 
 <style scoped>
 .hamburger-button {
-  font-size: 20px;
   position: fixed;
   top: 0;
-  right: 0;
-  background-color: rgb(0, 0, 0);
-  width: 100vw;
-  padding: 10px;
-  border: none;
-  color: white;
-  cursor: pointer;
+  right: 0px;
+  width: 50px; /* Aumentamos el área del botón */
+  height: 50px; /* Aumentamos el área del botón */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
   z-index: 3000;
-  text-align: right;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+.bar {
+  width: 25px; /* Mantemos las barras pequeñas */
+  height: 2px;
+  background-color: white;
+  margin: 4px 0;
+  transition: all 0.3s ease;
+}
+
+.bar.open:nth-child(1) {
+  transform: rotate(45deg) translate(7px, 7px);
+}
+
+.bar.open:nth-child(2) {
+  opacity: 0; /* Ocultamos la segunda barra */
+}
+
+.bar.open:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
 }
 
 .menu {
-  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.850);
   position: fixed;
   top: 0;
   left: 0;
@@ -108,5 +129,10 @@ export default {
   color: white;
   text-decoration: none;
   font-size: 20px;
+  transition: color 0.3s ease;
+}
+
+.menu ul li a:hover {
+  color: yellow;
 }
 </style>

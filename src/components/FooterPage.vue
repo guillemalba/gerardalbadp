@@ -77,7 +77,7 @@ export default {
 }
 
 .footer a {
-  color: #1e90ff;
+  color: #ffffff;
   text-decoration: none;
 }
 

@@ -57,5 +57,7 @@ export default {
 
 .custom-button3:hover {
   transform: scale(1.5); /* Hacer el botón más grande al hacer hover */
+  color: yellow;
+
 }
 </style>

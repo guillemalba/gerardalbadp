@@ -61,6 +61,12 @@ export default {
   margin-bottom: 15vh;
   writing-mode: vertical-rl;
   transition: font-size 0.3s ease; /* Transición suave al cambiar tamaño */
+  color: white; /* Texto blanco por defecto */
+  cursor: pointer;
+}
+
+.vertical-text h2:hover {
+  color: yellow; /* Cambiar a texto amarillo al hacer hover */
 }
 
 @media (max-width: 1000px) {
