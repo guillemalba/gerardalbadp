@@ -20,7 +20,7 @@
           >
             <div class="hover-overlay">
               <div class="video-info">
-                <p>{{ video.title }} / {{ video.duration }}</p>
+                <p class="textfamily">{{ video.title }} / {{ video.duration }}</p>
               </div>
               <button class="play-button">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="white"
@@ -160,6 +160,10 @@ export default {
 <style scoped>
 h1 {
   font-size: 34px;
+}
+
+.textfamily {
+  font-family: 'NewYork', serif; /* Usa la fuente para todos los títulos */
 }
 
 .video-preview {
