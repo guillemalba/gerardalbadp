@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="refresh" content="0; url=/" />
-</head>
-<body>
-  <p>If you are not redirected automatically, follow the <a href="/">link to example.com</a></p>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="0; URL=/#/404">
+    <script type="text/javascript">
+      // Redirige a la ruta correcta utilizando el hash
+      var redirect = window.location.pathname + window.location.search;
+      window.location.href = "/" + "#" + redirect;
+    </script>
+  </head>
+  <body></body>
 </html>
