@@ -74,9 +74,9 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  z-index: 3000;
+  z-index: 10000;
   cursor: pointer;
-  background-color: transparent;
+  background-color: transparent; /* Cambiado a transparente para mejorar la visualización */
   border: none;
 }
 

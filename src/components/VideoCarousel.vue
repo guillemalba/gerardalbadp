@@ -293,7 +293,7 @@ export default {
   color: white;
   font-size: 38px;
   cursor: pointer;
-  margin-top: 10px; /* Espacio entre el título y el botón */
+  margin-top: 0px; /* Espacio entre el título y el botón */
 }
 
 .play-button .icon {
@@ -304,13 +304,14 @@ export default {
 .video-info {
   color: white;
   text-align: center;
-  margin-bottom: 10px; /* Espacio entre el título y el botón */
+  margin-bottom: 0px; /* Espacio entre el título y el botón */
   cursor: pointer;
 }
 
 .clickable {
   cursor: pointer;
   text-decoration: underline;
+  font-size: 20px;
   z-index: 10000;
   font-family: 'NewYork', serif; /* Usa la fuente para todos los títulos */
 }
@@ -326,13 +327,13 @@ export default {
   height: 7px;
   width: 7px;
   border-radius: 50%;
-  background-color: #ddd;
+  background-color: #333;
   margin: 0 5px;
   cursor: pointer;
 }
 
 .carousel-dots .active {
-  background-color: #333;
+  background-color: white
 }
 
 /* Separador sutil entre secciones */
