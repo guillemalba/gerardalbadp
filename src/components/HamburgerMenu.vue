@@ -86,6 +86,7 @@ export default {
   background-color: white;
   margin: 4px 0;
   transition: all 0.3s ease;
+  pointer-events: none; /* Los clics pasan a través de las barras hacia el botón */
 }
 
 .bar.open:nth-child(1) {
