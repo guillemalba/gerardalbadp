@@ -307,6 +307,7 @@ export default {
   cursor: pointer;
   text-decoration: underline;
   z-index: 10000;
+  font-family: 'NewYork', serif; /* Usa la fuente para todos los títulos */
 }
 
 .carousel-dots {
