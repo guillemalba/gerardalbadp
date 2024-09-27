@@ -237,7 +237,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 25px;
+  padding: 10px;
   background-color: #000000;
   color: white;
 }
@@ -245,7 +245,7 @@ export default {
 .carousel-header h2 {
   margin: 0;
   text-align: center;
-  font-size: 28px; /* Ajustamos el tamaño del título */
+  font-size: 20px; /* Ajustamos el tamaño del título */
 }
 
 .close-button-header {
