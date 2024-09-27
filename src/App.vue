@@ -55,29 +55,18 @@ html, body {
 @font-face {
   font-family: 'Baskerville';
   src: url('@/assets/fonts/BASKRV_L.ttf') format('opentype');
-  font-weight: normal;
+  font-weight: 300;
   font-style: normal;
 }
 
 /* Aplica la fuente a toda la página */
 body {
-  font-family: 'Baskerville', sans-serif; /* Usa la fuente en todo el body */
+  font-family: 'Baskerville', serif; /* Usa la fuente en todo el body */
   color: #333;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'NewYork', serif; /* Usa la fuente para todos los títulos */
-}
-
-p {
-  font-family: 'Baskerville', sans-serif; /* Usa la fuente para los párrafos */
-}
-
-span {
-  font-family: 'Baskerville', sans-serif; /* Usa la fuente para los párrafos */
-}
-
-button {
-  font-family: 'Baskerville', sans-serif; /* Usa la fuente para los párrafos */
+h1, h2, h3, h4, h5, h6, p, span, button {
+  font-family: 'Baskerville', serif; /* Usa la fuente para todos los títulos */
+  font-weight: 50;
 }
 </style>

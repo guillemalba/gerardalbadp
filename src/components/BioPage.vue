@@ -97,7 +97,7 @@ export default {
 }
 
 .content-container {
-  margin: auto;
+  margin: 20px; /* Agregar margen para evitar que llegue a los bordes */
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 15px;
@@ -105,15 +105,23 @@ export default {
   max-width: 90vw;
   text-align: center;
   backdrop-filter: blur(10px);
-  width: 100%;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1000px) {
   .content-container {
     max-width: 800px;
+    margin: auto; /* Centrar el contenido en pantallas más grandes */
     padding: 40px;
   }
 }
+
+@media (max-width: 1000px) {
+  .content-container {
+    margin: 40px; /* Margen de 20px en pantallas pequeñas */
+    padding: 20px;
+  }
+}
+
 
 .content {
   padding: 20px;
