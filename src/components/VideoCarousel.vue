@@ -245,6 +245,7 @@ export default {
 .carousel-header h2 {
   margin: 0;
   text-align: center;
+  font-size: 28px; /* Ajustamos el tamaño del título */
 }
 
 .close-button-header {
@@ -352,7 +353,7 @@ export default {
   color: white;
   text-align: center;
   margin-bottom: 20px; /* Ajusta este valor para mover el título más arriba */
-  font-family: 'NewYork', serif; /* Usa la fuente para todos los títulos */
+  font-family: 'NewYork', serif;
   font-size: 18px;
 }
 
@@ -376,15 +377,38 @@ export default {
   background-color: white;
 }
 
-@media (min-width: 500px) {
-  .video-info {
-    font-size: 28px;
+/* Ajustes responsivos para pantallas con altura menor a 500px */
+@media (max-height: 500px) {
+  .carousel-header h2 {
+    font-size: 20px; /* Reducimos el tamaño del título */
   }
-}
 
-@media (min-width: 800px) {
+  .video-container-wrapper {
+    padding-top: 30%; /* Ajustamos la proporción del video */
+  }
+
+  .play-button .icon {
+    width: 28px; /* Reducimos el tamaño del botón de play */
+    height: 28px;
+  }
+
   .video-info {
-    font-size: 28px;
+    font-size: 14px; /* Reducimos el tamaño del título de los videos */
+    margin-bottom: 10px; /* Reducimos el margen del título */
+  }
+
+  .carousel-dots span {
+    height: 5px; /* Reducimos el tamaño de los dots */
+    width: 5px;
+  }
+
+  .carousel-dots {
+    margin-top: 5px; /* Reducimos el margen superior de los dots */
+    margin-bottom: 5px; /* Reducimos el margen inferior de los dots */
+  }
+
+  .close-button-header {
+    left: 450px; /* Colocamos el botón a la izquierda */
   }
 }
 </style>
