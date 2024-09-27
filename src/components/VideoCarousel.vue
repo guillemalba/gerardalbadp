@@ -61,8 +61,7 @@
 </template>
 
 <script>
-// Importamos la API de Vimeo
-import VimeoPlayer from '@vimeo/player';
+import Player from '@vimeo/player';
 
 export default {
   data() {
@@ -71,6 +70,8 @@ export default {
       touchStartX: 0,  // Coordenada inicial del toque
       mouseStartX: 0,  // Coordenada inicial del mouse (para dispositivos con ratón)
       isPlaying: false, // Indicador para saber si el video está en reproducción
+      isScrolling: false, // Nuevo indicador para saber si estamos haciendo scroll
+      vimeoPlayer: null, // Para almacenar la instancia del reproductor de Vimeo
       defaultThumbnail: require('@/assets/images/black.png'), // Imagen por defecto si el thumbnail no carga
     };
   },
@@ -133,6 +134,32 @@ export default {
     goToSlide(index) {
       this.currentIndex = index;
       this.isPlaying = false; // Reiniciar el estado de reproducción cuando se cambia de slide
+      this.scrollToVideo(index); // Desplazar el scroll al video correspondiente
+    },
+    handleScroll() {
+      // Calcula la posición del scroll para detectar el video que está centrado
+      const carousel = this.$refs.carouselTrack;
+      const scrollLeft = carousel.scrollLeft;
+      const slideWidth = carousel.clientWidth;
+      const newIndex = Math.round(scrollLeft / slideWidth);
+
+      // Si ya estamos en scroll, solo cancela la reproducción cuando el video está completamente en la vista.
+      if (!this.isScrolling && this.isPlaying) {
+        this.isScrolling = true; // Bloqueamos la cancelación de reproducción hasta que el scroll se complete
+      }
+
+      if (newIndex !== this.currentIndex) {
+        this.currentIndex = newIndex;
+        if (this.isScrolling && this.isPlaying) {
+          // Si se completó el scroll al nuevo slide, entonces cerramos el video.
+          this.closeVideo();
+        }
+      }
+
+      // Cuando el scroll está al centro de un nuevo video, liberamos la bandera de scroll.
+      if (Math.abs(scrollLeft - (slideWidth * this.currentIndex)) < 5) {
+        this.isScrolling = false;
+      }
     },
     handleTouchStart(event) {
       this.touchStartX = event.touches[0].clientX;
@@ -159,32 +186,41 @@ export default {
     prevSlide() {
       if (this.currentIndex > 0) {
         this.currentIndex--;
-        this.isPlaying = false; // Detener reproducción si se cambia de slide
+        this.scrollToVideo(this.currentIndex); // Asegurar que el scroll se mueva al slide correspondiente
       }
     },
     nextSlide() {
       if (this.currentIndex < this.relatedVideos.length - 1) {
         this.currentIndex++;
-        this.isPlaying = false; // Detener reproducción si se cambia de slide
+        this.scrollToVideo(this.currentIndex); // Asegurar que el scroll se mueva al slide correspondiente
       }
+    },
+    scrollToVideo(index) {
+      const carousel = this.$refs.carouselTrack;
+      const slideWidth = carousel.clientWidth;
+      carousel.scrollTo({
+        left: slideWidth * index,
+        behavior: 'smooth',
+      });
     },
     playVideo(index) {
       this.currentIndex = index;
       this.isPlaying = true; // Iniciar la reproducción en el slide actual
-
-      // Aseguramos que el video se reproduzca automáticamente en dispositivos iOS
-      this.$nextTick(() => {
-        const iframe = this.$refs.carouselTrack.querySelectorAll('iframe')[index];
-        if (iframe) {
-          const player = new VimeoPlayer(iframe);
-          player.play().catch((error) => {
-            console.error('Error en la reproducción automática:', error);
-          });
-        }
-      });
+      this.initVimeoPlayer(); // Inicializar el reproductor de Vimeo
     },
     closeVideo() {
       this.isPlaying = false; // Cerrar el reproductor y volver a mostrar la miniatura
+      if (this.vimeoPlayer) {
+        this.vimeoPlayer.pause().catch(error => {
+          console.error('Error pausing the video:', error);
+        });
+      }
+    },
+    initVimeoPlayer() {
+      const iframe = this.$refs.carouselTrack.querySelectorAll('iframe')[this.currentIndex];
+      if (iframe) {
+        this.vimeoPlayer = new Player(iframe);
+      }
     }
   }
 };
@@ -348,7 +384,7 @@ export default {
 
 @media (min-width: 800px) {
   .video-info {
-    font-size: px;
+    font-size: 28px;
   }
 }
 </style>
