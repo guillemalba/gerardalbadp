@@ -14,24 +14,11 @@
       </button>
     </div>
 
-    <div 
-      class="carousel" 
-      @touchstart="handleTouchStart" 
-      @touchend="handleTouchEnd" 
-      @mousedown="handleMouseStart" 
-      @mouseup="handleMouseEnd">
-      <!-- Contenedor de videos, que se desplaza de acuerdo al video actual -->
-      <div 
-        class="carousel-track" 
-        :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
-        
-        <!-- Aquí agregamos la lógica para mostrar el reproductor de video o la miniatura -->
-        <div 
-          v-for="(video, index) in relatedVideos" 
-          :key="video.id" 
-          class="carousel-slide">
-          
-          <!-- Si es el video actual y está en reproducción, mostramos el reproductor -->
+    <!-- Carrusel con scroll-snap -->
+    <div :class="{'carousel is-playing': isPlaying, 'carousel': !isPlaying}" ref="carouselTrack" @scroll="handleScroll">
+      <div class="carousel-track">
+        <!-- Mostramos los videos -->
+        <div v-for="(video, index) in relatedVideos" :key="video.id" class="carousel-slide">
           <div class="video-container-wrapper">
             <div class="video-container">
               <iframe
@@ -42,24 +29,14 @@
                 frameborder="0"
                 allow="autoplay; fullscreen; picture-in-picture"
                 allowfullscreen
+                muted
               ></iframe>
 
               <!-- Si no se está reproduciendo, mostramos la miniatura -->
-              <div 
-                v-else 
-                class="thumbnail" 
-                :style="{ backgroundImage: `url(${video.thumbnail || defaultThumbnail})` }"
+              <div v-else class="thumbnail" :style="{ backgroundImage: `url(${video.thumbnail || defaultThumbnail})` }"
                 @click="goToMobileVideoDetail(video)">
-                
                 <div class="overlay">
-                  <!-- El título del video centrado encima del botón de play, ahora clickeable -->
-                  <div class="video-info">
-                    <p class="clickable">
-                      {{ video.title }}
-                    </p>
-                  </div>
-                  
-                  <!-- Botón de play debajo del título -->
+                  <div class="video-info">{{ video.title }}</div>
                   <button class="play-button" @click.stop="playVideo(index)">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="white"
                       stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -67,7 +44,6 @@
                     </svg>
                   </button>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -77,21 +53,17 @@
 
     <!-- Dots para indicar el video actual -->
     <div class="carousel-dots">
-      <span 
-        v-for="(video, index) in relatedVideos" 
-        :key="index"
-        :class="{ 'active': index === currentIndex }"
+      <span v-for="(video, index) in relatedVideos" :key="index" :class="{ 'active': index === currentIndex }"
         @click="goToSlide(index)">
       </span>
     </div>
-
-    <!-- Separador entre secciones -->
-    <hr class="section-separator" />
   </div>
 </template>
 
-
 <script>
+// Importamos la API de Vimeo
+import VimeoPlayer from '@vimeo/player';
+
 export default {
   data() {
     return {
@@ -99,7 +71,7 @@ export default {
       touchStartX: 0,  // Coordenada inicial del toque
       mouseStartX: 0,  // Coordenada inicial del mouse (para dispositivos con ratón)
       isPlaying: false, // Indicador para saber si el video está en reproducción
-      defaultThumbnail: require('@/assets/images/black.png') // Imagen por defecto si el thumbnail no carga
+      defaultThumbnail: require('@/assets/images/black.png'), // Imagen por defecto si el thumbnail no carga
     };
   },
   props: {
@@ -109,7 +81,19 @@ export default {
   created() {
     this.fetchThumbnailsForRelatedVideos(); // Asegurarse de cargar los thumbnails en la inicialización
   },
+  mounted() {
+    window.addEventListener('scroll', this.handlePageScroll); // Agregar el listener de scroll
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handlePageScroll); // Eliminar el listener de scroll
+  },
   methods: {
+    handlePageScroll() {
+      // Si hay un video en reproducción y el usuario hace scroll, detenemos el video
+      if (this.isPlaying) {
+        this.closeVideo();
+      }
+    },
     goToMobileVideoDetail(video) {
       // Navegar a la página de detalles del video, usando el ID y el título de la sección en la ruta
       this.$router.push({
@@ -144,7 +128,7 @@ export default {
     },
     getEmbedUrl(src) {
       const videoId = src.split('/').pop();
-      return `https://player.vimeo.com/video/${videoId}?autoplay=1`; // Autoplay al cargar el video
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1`; // Autoplay al cargar el video y muted
     },
     goToSlide(index) {
       this.currentIndex = index;
@@ -187,6 +171,17 @@ export default {
     playVideo(index) {
       this.currentIndex = index;
       this.isPlaying = true; // Iniciar la reproducción en el slide actual
+
+      // Aseguramos que el video se reproduzca automáticamente en dispositivos iOS
+      this.$nextTick(() => {
+        const iframe = this.$refs.carouselTrack.querySelectorAll('iframe')[index];
+        if (iframe) {
+          const player = new VimeoPlayer(iframe);
+          player.play().catch((error) => {
+            console.error('Error en la reproducción automática:', error);
+          });
+        }
+      });
     },
     closeVideo() {
       this.isPlaying = false; // Cerrar el reproductor y volver a mostrar la miniatura
@@ -196,7 +191,6 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos para VideoCarousel */
 .carousel-container {
   position: relative;
   width: 100%;
@@ -205,9 +199,8 @@ export default {
 
 .carousel-header {
   display: flex;
-  justify-content: center; /* Centrar el texto */
+  justify-content: center;
   align-items: center;
-  position: relative; /* Para colocar el botón de cierre con position absolute */
   padding: 25px;
   background-color: #000000;
   color: white;
@@ -215,9 +208,7 @@ export default {
 
 .carousel-header h2 {
   margin: 0;
-  position: absolute; /* Mantener el título centrado */
-  left: 50%;
-  transform: translateX(-50%); /* Asegura que el título esté perfectamente centrado */
+  text-align: center;
 }
 
 .close-button-header {
@@ -231,29 +222,50 @@ export default {
   right: 0px; /* Colocar el botón a la derecha */
 }
 
+/* Desactivar scroll vertical cuando está en modo reproducción */
+.carousel.is-playing {
+  overflow-y: hidden;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  /* Ocultamos el scroll horizontal */
+  scrollbar-width: none; /* Firefox */
+}
+
+.carousel.is-playing::-webkit-scrollbar {
+  display: none; /* Chrome, Safari y Edge */
+}
+
 .carousel {
-  position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  /* Ocultamos el scroll horizontal */
+  scrollbar-width: none; /* Firefox */
+}
+
+.carousel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari y Edge */
 }
 
 .carousel-track {
   display: flex;
-  transition: transform 0.5s ease-in-out;
-  width: 100%;
 }
 
 .carousel-slide {
-  min-width: 100%;
+  flex: 0 0 100%;
+  scroll-snap-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* Proporción 16:9 para el video y la miniatura */
 .video-container-wrapper {
   width: 100%;
-  padding-top: 56.25%; /* Proporción de 16:9 (9 / 16 = 0.5625) */
+  padding-top: 56.25%;
   position: relative;
 }
 
@@ -293,7 +305,6 @@ export default {
   color: white;
   font-size: 38px;
   cursor: pointer;
-  margin-top: 0px; /* Espacio entre el título y el botón */
 }
 
 .play-button .icon {
@@ -304,16 +315,9 @@ export default {
 .video-info {
   color: white;
   text-align: center;
-  margin-bottom: 0px; /* Espacio entre el título y el botón */
-  cursor: pointer;
-}
-
-.clickable {
-  cursor: pointer;
-  text-decoration: underline;
-  font-size: 20px;
-  z-index: 10000;
+  margin-bottom: 20px; /* Ajusta este valor para mover el título más arriba */
   font-family: 'NewYork', serif; /* Usa la fuente para todos los títulos */
+  font-size: 18px;
 }
 
 .carousel-dots {
@@ -333,13 +337,18 @@ export default {
 }
 
 .carousel-dots .active {
-  background-color: white
+  background-color: white;
 }
 
-/* Separador sutil entre secciones */
-.section-separator {
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Color sutil para la línea */
-  width: 100%;
+@media (min-width: 500px) {
+  .video-info {
+    font-size: 28px;
+  }
+}
+
+@media (min-width: 800px) {
+  .video-info {
+    font-size: px;
+  }
 }
 </style>

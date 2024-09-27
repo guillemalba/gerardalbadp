@@ -1,3 +1,4 @@
+<!-- HomePage.vue -->
 <template>
   <div class="home-page">
     <LeftSidebar class="left-sidebar" />
@@ -61,7 +62,6 @@
           :videoSrc="filmVideos[0].src" 
           :relatedVideos="filmVideos" 
           type="film"
-          :customThumbnail="filmThumbnail"
           @play-video="handlePlayVideo" />
       </div>
     </div>
