@@ -166,9 +166,7 @@ export default {
           { id: 1, src: 'https://vimeo.com/290744844', thumbnail: '', title: '', duration: '' },
           { id: 2, src: 'https://vimeo.com/199707225', thumbnail: '', title: '', duration: '' },
           { id: 3, src: 'https://vimeo.com/189584267', thumbnail: '', title: '', duration: '' },
-          { id: 4, src: 'https://vimeo.com/522549222', thumbnail: '', title: '', duration: '' },
-          { id: 5, src: 'https://vimeo.com/522377522', thumbnail: '', title: '', duration: '' },
-          { id: 6, src: 'https://vimeo.com/522726870', thumbnail: '', title: '', duration: '' }
+          { id: 4, src: 'https://vimeo.com/522549222', thumbnail: '', title: '', duration: '' }
         ];
       } else if (videoType === 'underwater') {
         this.relatedVideos = [

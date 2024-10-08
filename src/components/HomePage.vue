@@ -104,9 +104,7 @@ export default {
         { id: 1, src: 'https://vimeo.com/290744844' },
         { id: 2, src: 'https://vimeo.com/199707225' },
         { id: 3, src: 'https://vimeo.com/189584267' },
-        { id: 4, src: 'https://vimeo.com/522549222' },
-        { id: 5, src: 'https://vimeo.com/522377522' },
-        { id: 6, src: 'https://vimeo.com/522726870' }
+        { id: 4, src: 'https://vimeo.com/522549222' }
       ],
       underwaterVideos: [
         { id: 1, src: 'https://vimeo.com/522377522' },
