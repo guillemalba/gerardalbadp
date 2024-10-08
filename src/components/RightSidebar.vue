@@ -92,4 +92,16 @@ export default {
     margin-bottom: 8vh; /* Reducimos el espacio entre textos en pantallas muy pequeñas */
   }
 }
+
+@media (hover: none) {
+  .vertical-text h2:hover {
+    color: white; /* Mantiene el color original en dispositivos táctiles */
+    opacity: 1; /* Asegurarse de que el texto no desaparezca */
+  }
+
+  .vertical-text h2:active {
+    color: yellow; /* Cambiar el color solo cuando se presiona el texto en dispositivos táctiles */
+  }
+}
+
 </style>

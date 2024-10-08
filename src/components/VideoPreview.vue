@@ -418,4 +418,50 @@ h1 {
     height: calc(100vw * 9 / 16);
   }
 }
+
+@media (hover: none) {
+  /* Asegurarse de que los elementos con hover se mantengan visibles en dispositivos táctiles */
+  
+  /* Para el botón de "Show More" y "Show Less" */
+  .custom-button:hover {
+    color: white;
+    opacity: 1; /* Evita que desaparezca en pantallas táctiles */
+  }
+
+  .custom-button:active {
+    color: yellow; /* Cambiar el color cuando se presiona el botón en dispositivos táctiles */
+  }
+
+  /* Flechas de navegación (Chevron izquierda y derecha) */
+  .arrow:hover {
+    color: white; /* Mantén el color blanco en dispositivos táctiles */
+    opacity: 1;
+  }
+
+  .arrow:active {
+    color: yellow; /* Cambia a amarillo cuando se presiona en dispositivos táctiles */
+  }
+
+  /* Para las superposiciones (hover-overlay) en dispositivos táctiles */
+  .hover-overlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.2); /* Reduce la intensidad del fondo en dispositivos táctiles */
+  }
+
+  .video-item:active .hover-overlay {
+    background: rgba(0, 0, 0, 0.6); /* Al hacer clic en el video, aumenta la opacidad */
+  }
+
+  /* Para el icono dentro del botón de "Show More"/"Show Less" */
+  .custom-button:hover .icon {
+    stroke: white; /* Mantén el color blanco para dispositivos táctiles */
+  }
+
+  .custom-button:active .icon {
+    stroke: yellow; /* Cambiar el color del icono a amarillo cuando se presiona en dispositivos táctiles */
+  }
+}
+
+
+
 </style>
