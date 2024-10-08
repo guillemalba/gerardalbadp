@@ -1,16 +1,19 @@
-<!-- VideoPreview.vue -->
 <template>
-<div class="video-preview" :style="{ backgroundImage: `url(${customThumbnail || thumbnail})` }">
-      <div class="overlay">
+  <div class="video-preview" :style="{ backgroundImage: `url(${customThumbnail || thumbnail})` }">
+    <div class="overlay">
       <h1>{{ title }}</h1>
       <CButton icon="play" :onClick="playVideo" />
     </div>
+    
     <transition name="slide-fade">
       <div v-if="showVideoList" class="video-list-container">
+        <!-- Flecha izquierda -->
         <div class="arrow-container left-arrow-container" :class="{ invisible: !canScrollLeft }" @click="scrollLeft">
           <span class="arrow left-arrow chevron">&#x276E;</span>
         </div>
-        <div class="video-list" ref="videoList">
+        
+        <!-- Lista de videos -->
+        <div class="video-list" ref="videoList" @scroll="checkScroll">
           <div
             v-for="video in relatedVideos"
             :key="video.id"
@@ -31,6 +34,8 @@
             </div>
           </div>
         </div>
+        
+        <!-- Flecha derecha -->
         <div class="arrow-container right-arrow-container" :class="{ invisible: !canScrollRight }" @click="scrollRight">
           <span class="arrow right-arrow chevron">&#x276F;</span>
         </div>
@@ -90,17 +95,13 @@ export default {
     this.fetchThumbnailsForRelatedVideos();
   },
   mounted() {
-    this.$nextTick(this.checkScroll);
-    window.addEventListener('resize', this.checkScroll);
+    this.$nextTick(this.checkScroll); // Comprobar el estado inicial del scroll
+    window.addEventListener('resize', this.checkScroll); // Detectar cambios en el tamaño de la ventana
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.checkScroll);
+    window.removeEventListener('resize', this.checkScroll); // Eliminar el listener al desmontar
   },
   methods: {
-    getEmbedUrl(src) {
-      const videoId = src.split('/').pop();
-      return `https://player.vimeo.com/video/${videoId}`;
-    },
     async fetchThumbnail(videoUrl) {
       const videoId = videoUrl.split('/').pop();
       const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
@@ -113,8 +114,8 @@ export default {
         const response = await fetch(`https://vimeo.com/api/v2/video/${videoId}.json`);
         const data = await response.json();
         video.thumbnail = data[0].thumbnail_large;
-        video.title = data[0].title; // Assuming the API provides the title
-        video.duration = this.formatDuration(data[0].duration); // Convert duration to mm:ss format
+        video.title = data[0].title;
+        video.duration = this.formatDuration(data[0].duration);
       }
     },
     playVideo() {
@@ -122,25 +123,26 @@ export default {
     },
     toggleVideoList() {
       this.showVideoList = !this.showVideoList;
-      this.$nextTick(this.checkScroll); // Ensure scroll check after DOM update
+      this.$nextTick(this.checkScroll); // Verificar el scroll después de cambiar la lista
     },
     scrollLeft() {
       const container = this.$refs.videoList;
       if (container) {
         container.scrollBy({ left: -300, behavior: 'smooth' });
-        this.$nextTick(this.checkScroll);
+        this.$nextTick(this.checkScroll); // Verificar después de mover
       }
     },
     scrollRight() {
       const container = this.$refs.videoList;
       if (container) {
         container.scrollBy({ left: 300, behavior: 'smooth' });
-        this.$nextTick(this.checkScroll);
+        this.$nextTick(this.checkScroll); // Verificar después de mover
       }
     },
     checkScroll() {
       const container = this.$refs.videoList;
       if (container) {
+        // Verificar si se puede hacer scroll a la izquierda o derecha
         this.canScrollLeft = container.scrollLeft > 0;
         this.canScrollRight = container.scrollWidth > container.clientWidth + container.scrollLeft;
       }
@@ -204,13 +206,9 @@ h1 {
   bottom: 0;
   width: 100%;
   justify-content: center;
-  /* Ajusta la distribución para centrar el contenedor de la lista de videos */
   background-color: #0000002c;
-  /* Fondo semi-transparente para contraste */
   z-index: 999;
-  /* Asegura que la lista esté encima del contenido principal */
   overflow: hidden;
-  /* Oculta el contenido desbordado para que las flechas no se muevan */
 }
 
 .video-list {
@@ -218,14 +216,9 @@ h1 {
   overflow-x: auto;
   scroll-behavior: smooth;
   max-width: calc(4 * 300px);
-  /* Ancho máximo para mostrar 4 videos a la vez, ajusta según el tamaño de los videos */
   gap: 0px;
-  /* Espacio entre los videos */
   flex-grow: 1;
-  /* Permite que el contenedor de videos crezca y ocupe el espacio disponible */
 }
-
-
 
 .hover-overlay {
   position: absolute;
@@ -325,88 +318,67 @@ h1 {
   color: #ffffff;
   font-size: 16px;
   cursor: pointer;
-  border: none; /* Added white border */
+  border: none;
   display: flex;
   align-items: center;
   text-transform: uppercase;
   z-index: 1000;
-  white-space: nowrap; /* Ensure the button content stays in a single line */
+  white-space: nowrap;
 }
 
 .custom-button .icon {
-  margin-right: 8px; /* Ajusta el margen entre el icono y el texto si es necesario */
+  margin-right: 8px;
   width: 25px;
   height: 25px;
 }
 
-/* Estilo del botón personalizado */
 .custom-button:hover .icon {
-  stroke: yellow; /* Cambia el color del icono a amarillo en hover */
+  stroke: yellow;
 }
 
-
 .custom-button span {
-  margin-left: 8px; /* Add some spacing between the icon and the text */
+  margin-left: 8px;
 }
 
 .custom-button:hover {
-  /* font-size: 20px; */
   color: yellow;
-}
-
-/* Ocultar la barra de desplazamiento en diferentes navegadores */
-.video-list::-webkit-scrollbar {
-  display: none;
-  /* Ocultar en Chrome, Safari y Opera */
-}
-
-.video-list {
-  -ms-overflow-style: none;
-  /* Ocultar en Internet Explorer y Edge */
-  scrollbar-width: none;
-  /* Ocultar en Firefox */
 }
 
 .toggle-button {
   position: absolute;
   bottom: 10px;
-  /* Ajusta según sea necesario para la posición inicial */
   left: 50%;
   transform: translateX(-50%);
-  /* transition: all 0.2s ease; */
 }
 
 .toggle-button.moved-up {
   bottom: auto;
   top: 71%;
-  /* Ajusta según sea necesario para la posición final */
   transform: translate(-50%, 40%);
-  /* transition: all 0.5s ease; */
 }
 
 @media (max-width: 1500px) {
   .video-list {
-    max-width: calc(3 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
+    max-width: calc(3 * 300px);
   }
 }
 
 @media (max-width: 1200px) {
   .video-list {
-    max-width: calc(2 * 300px); /* Ancho máximo para mostrar 2 videos a la vez */
+    max-width: calc(2 * 300px);
   }
 }
 
 @media (max-width: 1000px) {
   .video-list {
-    max-width: calc(1 * 200px); /* Ancho máximo para mostrar 1 video a la vez */
+    max-width: calc(1 * 200px);
   }
 
   .video-item {
-    width: 200px; /* Ancho de las miniaturas reducido a 200px */
-    height: 150px; /* Ajustar la altura según el nuevo ancho */
+    width: 200px;
+    height: 150px;
     position: relative;
     flex-shrink: 0;
-    /* Evita que los videos se encojan */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -420,7 +392,6 @@ h1 {
     height: 150px;
     position: relative;
     flex-shrink: 0;
-    /* Evita que los videos se encojan */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -429,11 +400,10 @@ h1 {
 }
 
 @media (max-width: 1000px) {
-
   .video-preview {
     width: 100vw;
-    height: calc(100vw * 9 / 16); /* Mantiene la proporción 16:9 */
-    min-height: auto; /* Para pantallas pequeñas, el mínimo de 800px no es necesario */
+    height: calc(100vw * 9 / 16);
+    min-height: auto;
   }
 
   .video-list {
@@ -445,9 +415,7 @@ h1 {
 
   .video-item {
     width: 100%;
-    height: calc(100vw * 9 / 16); /* Mantiene la proporción 16:9 */
+    height: calc(100vw * 9 / 16);
   }
 }
-
-
 </style>
