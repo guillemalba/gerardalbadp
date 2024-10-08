@@ -304,18 +304,20 @@ export default {
   background: transparent;
   border: none;
   font-size: 55px;
-  color: white;
+  color: rgb(255, 255, 255);
   cursor: pointer;
   z-index: 10000;
+  transition: color 0.3s ease;
 }
 
 .close-button svg {
   width: 35px;
   height: 35px;
+  transition: stroke 0.3s ease; /* Transición suave para el cambio de color del icono */
 }
 
-.close-button:hover {
-  color: #ccc;
+.close-button:hover svg {
+  stroke: yellow; /* Cambiar a amarillo al hacer hover */
 }
 
 .video-content {
@@ -500,7 +502,7 @@ export default {
 }
 
 .arrow:hover {
-  color: #ccc;
+  color: yellow;
 }
 
 .arrow-container {
@@ -552,4 +554,53 @@ export default {
     max-width: calc(2 * 300px); /* Ancho máximo para mostrar 2 videos a la vez */
   }
 }
+
+
+@media (hover: none) {
+  /* Asegúrate de que el botón no desaparezca en dispositivos táctiles */
+  .custom-button:hover {
+    color: white;
+    opacity: 1; /* Evita que desaparezca en pantallas táctiles */
+  }
+
+  .custom-button:active {
+    color: yellow; /* Cambiar el color del texto cuando se presiona en dispositivos táctiles */
+  }
+
+  /* Flechas de navegación (Chevron izquierda y derecha) */
+  .arrow:hover {
+    color: white; /* Mantén el color blanco en dispositivos táctiles */
+    opacity: 1;
+  }
+
+  .arrow:active {
+    color: yellow; /* Cambia a amarillo cuando se presiona en dispositivos táctiles */
+  }
+
+  /* Para las superposiciones (hover-overlay) en dispositivos táctiles */
+  .hover-overlay {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.2); /* Reduce la intensidad del fondo en dispositivos táctiles */
+  }
+
+  .video-item:active .hover-overlay {
+    background: rgba(0, 0, 0, 0.6); /* Al hacer clic en el video, aumenta la opacidad */
+  }
+
+  /* Para el icono dentro del botón de "Show More"/"Show Less" */
+  .custom-button .icon {
+    stroke: white; /* Mantén el color blanco por defecto para dispositivos táctiles */
+    transition: stroke 0.2s ease; /* Añadir una transición para suavizar el cambio de color */
+  }
+
+  .custom-button:active .icon {
+    stroke: yellow; /* Cambia a amarillo mientras se presiona el botón en dispositivos táctiles */
+  }
+
+  /* Volver a blanco después de que el clic ha terminado */
+  .custom-button:not(:active) .icon {
+    stroke: white; /* Volver a blanco una vez que se suelta el botón */
+  }
+}
+
 </style>

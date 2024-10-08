@@ -192,4 +192,10 @@ button:hover {
     height: 120px;
   }
 }
+
+@media (hover: none) {
+  button:hover {
+    background-color: #ffffff; /* Mantén el color original en dispositivos táctiles */
+  }
+}
 </style>
