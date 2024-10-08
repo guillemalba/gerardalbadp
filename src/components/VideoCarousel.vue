@@ -150,6 +150,15 @@ export default {
           this.closeVideo();
         }
       }
+    },
+    goToSlide(index) {
+      const slideWidth = this.$refs.carouselTrack.clientWidth;
+      const scrollPosition = slideWidth * index;
+      this.$refs.carouselTrack.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+      this.currentIndex = index;
     }
   }
 };
