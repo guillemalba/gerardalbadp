@@ -19,7 +19,7 @@
       <div class="carousel-track">
         <!-- Mostramos los videos -->
         <div v-for="(video, index) in relatedVideos" :key="video.id" class="carousel-slide">
-          <div class="video-container-wrapper">
+          <div class="video-container-wrapper" :class="{ 'fullscreen': isFullscreen }">
             <div class="video-container">
               <iframe
                 v-if="isPlaying && currentIndex === index"
@@ -29,7 +29,7 @@
                 frameborder="0"
                 allow="autoplay; fullscreen; picture-in-picture"
                 allowfullscreen
-                muted
+                ref="vimeoIframe"
               ></iframe>
 
               <!-- Si no se está reproduciendo, mostramos la miniatura -->
@@ -67,10 +67,8 @@ export default {
   data() {
     return {
       currentIndex: 0, // Índice del video actual
-      touchStartX: 0,  // Coordenada inicial del toque
-      mouseStartX: 0,  // Coordenada inicial del mouse (para dispositivos con ratón)
       isPlaying: false, // Indicador para saber si el video está en reproducción
-      isScrolling: false, // Nuevo indicador para saber si estamos haciendo scroll
+      isFullscreen: false, // Indicador para saber si el video está en pantalla completa simulada
       vimeoPlayer: null, // Para almacenar la instancia del reproductor de Vimeo
       defaultThumbnail: require('@/assets/images/black.png'), // Imagen por defecto si el thumbnail no carga
     };
@@ -82,19 +80,7 @@ export default {
   created() {
     this.fetchThumbnailsForRelatedVideos(); // Asegurarse de cargar los thumbnails en la inicialización
   },
-  mounted() {
-    window.addEventListener('scroll', this.handlePageScroll); // Agregar el listener de scroll
-  },
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.handlePageScroll); // Eliminar el listener de scroll
-  },
   methods: {
-    handlePageScroll() {
-      // Si hay un video en reproducción y el usuario hace scroll, detenemos el video
-      if (this.isPlaying) {
-        this.closeVideo();
-      }
-    },
     goToMobileVideoDetail(video) {
       // Navegar a la página de detalles del video, usando el ID y el título de la sección en la ruta
       this.$router.push({
@@ -131,78 +117,6 @@ export default {
       const videoId = src.split('/').pop();
       return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1`; // Autoplay al cargar el video y muted
     },
-    goToSlide(index) {
-      this.currentIndex = index;
-      this.isPlaying = false; // Reiniciar el estado de reproducción cuando se cambia de slide
-      this.scrollToVideo(index); // Desplazar el scroll al video correspondiente
-    },
-    handleScroll() {
-      // Calcula la posición del scroll para detectar el video que está centrado
-      const carousel = this.$refs.carouselTrack;
-      const scrollLeft = carousel.scrollLeft;
-      const slideWidth = carousel.clientWidth;
-      const newIndex = Math.round(scrollLeft / slideWidth);
-
-      // Si ya estamos en scroll, solo cancela la reproducción cuando el video está completamente en la vista.
-      if (!this.isScrolling && this.isPlaying) {
-        this.isScrolling = true; // Bloqueamos la cancelación de reproducción hasta que el scroll se complete
-      }
-
-      if (newIndex !== this.currentIndex) {
-        this.currentIndex = newIndex;
-        if (this.isScrolling && this.isPlaying) {
-          // Si se completó el scroll al nuevo slide, entonces cerramos el video.
-          this.closeVideo();
-        }
-      }
-
-      // Cuando el scroll está al centro de un nuevo video, liberamos la bandera de scroll.
-      if (Math.abs(scrollLeft - (slideWidth * this.currentIndex)) < 5) {
-        this.isScrolling = false;
-      }
-    },
-    handleTouchStart(event) {
-      this.touchStartX = event.touches[0].clientX;
-    },
-    handleTouchEnd(event) {
-      const touchEndX = event.changedTouches[0].clientX;
-      this.handleSwipe(touchEndX - this.touchStartX);
-    },
-    handleMouseStart(event) {
-      this.mouseStartX = event.clientX;
-    },
-    handleMouseEnd(event) {
-      const mouseEndX = event.clientX;
-      this.handleSwipe(mouseEndX - this.mouseStartX);
-    },
-    handleSwipe(deltaX) {
-      const swipeThreshold = 50;
-      if (deltaX > swipeThreshold) {
-        this.prevSlide();
-      } else if (deltaX < -swipeThreshold) {
-        this.nextSlide();
-      }
-    },
-    prevSlide() {
-      if (this.currentIndex > 0) {
-        this.currentIndex--;
-        this.scrollToVideo(this.currentIndex); // Asegurar que el scroll se mueva al slide correspondiente
-      }
-    },
-    nextSlide() {
-      if (this.currentIndex < this.relatedVideos.length - 1) {
-        this.currentIndex++;
-        this.scrollToVideo(this.currentIndex); // Asegurar que el scroll se mueva al slide correspondiente
-      }
-    },
-    scrollToVideo(index) {
-      const carousel = this.$refs.carouselTrack;
-      const slideWidth = carousel.clientWidth;
-      carousel.scrollTo({
-        left: slideWidth * index,
-        behavior: 'smooth',
-      });
-    },
     playVideo(index) {
       this.currentIndex = index;
       this.isPlaying = true; // Iniciar la reproducción en el slide actual
@@ -221,12 +135,54 @@ export default {
       if (iframe) {
         this.vimeoPlayer = new Player(iframe);
       }
+    },
+    handleScroll() {
+      // Calcula la posición del scroll para detectar el video que está centrado
+      const carousel = this.$refs.carouselTrack;
+      const scrollLeft = carousel.scrollLeft;
+      const slideWidth = carousel.clientWidth;
+      const newIndex = Math.round(scrollLeft / slideWidth);
+
+      if (newIndex !== this.currentIndex) {
+        this.currentIndex = newIndex;
+        if (this.isPlaying) {
+          // Si hay un video en reproducción, lo detenemos cuando se cambia de slide
+          this.closeVideo();
+        }
+      }
     }
   }
 };
 </script>
 
 <style scoped>
+.carousel-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.video-container-wrapper.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background-color: black;
+}
+
+.fullscreen-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 10000;
+  background-color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
 .carousel-container {
   position: relative;
   width: 100%;
