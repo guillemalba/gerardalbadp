@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <RightSidebar class="right-sidebar" />
+    <RightSidebar class="right-sidebar" @scrollToWork="scrollToWork" @scrollToContact="scrollToContact" />
     
     <FooterPage ref="footer" /> <!-- Referencia para hacer scroll al footer -->
   </div>

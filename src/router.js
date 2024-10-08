@@ -1,6 +1,5 @@
-import { createRouter, createWebHashHistory } from 'vue-router'; // Cambia a hash history
+import { createRouter, createWebHashHistory } from 'vue-router';
 import HomePage from './components/HomePage.vue';
-import VideoPlayer from './components/VideoPlayer.vue';
 import BioPage from './components/BioPage.vue';
 import MobileVideoDetail from './components/MobileVideoDetail.vue';
 
@@ -9,12 +8,6 @@ const routes = [
     path: '/',
     name: 'Home',
     component: HomePage,
-  },
-  {
-    path: '/video',
-    name: 'VideoPlayer',
-    component: VideoPlayer,
-    props: route => ({ videoSrc: route.query.videoSrc })
   },
   {
     path: '/bio',
@@ -33,7 +26,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(), // Usar hash history en lugar de web history
+  history: createWebHashHistory(),
   routes,
 });
 

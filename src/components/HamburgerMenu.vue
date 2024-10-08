@@ -40,14 +40,17 @@ export default {
     scrollToSection(section) {
       this.toggleMenu(); // Cierra el menú después de hacer clic
       if (section === 'work') {
+        // Enviar evento personalizado para que el componente padre maneje el scroll
         this.$emit('scrollToWork');
+        this.$router.push({ path: '/' }); // Mantener la URL en la raíz
       } else if (section === 'contact') {
         this.$emit('scrollToContact');
+        this.$router.push({ path: '/' }); // Mantener la URL en la raíz
       }
     },
     goToBio() {
       this.toggleMenu(); // Cierra el menú después de hacer clic
-      this.$router.push({ name: 'Bio' });
+      this.$router.push({ name: 'Bio' }); // Navegar a la página de biografía
     },
     handleClickOutside(event) {
       const menu = this.$refs.menu;

@@ -2,9 +2,9 @@
   <div class="right-sidebar">
     <!-- Contenido del Right Sidebar -->
     <div class="vertical-text">
-      <h2 @click="goToFooter">Contact</h2>
-      <h2 @click="goToSection('bio')">Bio</h2>
-      <h2 @click="goToSection('work')">Work</h2>
+      <h2 @click="scrollOrNavigate('contact')">Contact</h2>
+      <h2 @click="goToBio">Bio</h2>
+      <h2 @click="scrollOrNavigate('work')">Work</h2>
     </div>
   </div>
 </template>
@@ -13,18 +13,30 @@
 export default {
   name: 'RightSidebar',
   methods: {
-    goToSection(section) {
-      if (section === 'work') {
-        // Redirige a la página de inicio con el parámetro de consulta `scroll=work`
-        this.$router.push({ name: 'Home', query: { scroll: 'work' } });
-      } else if (section === 'bio') {
-        // Redirige a la página de biografía
-        this.$router.push({ name: 'Bio' });
-      }
+    // Método para navegar a Bio
+    goToBio() {
+      this.$router.push({ name: 'Bio' });
     },
-    goToFooter() {
-      // Redirige a la página de inicio con el parámetro de consulta `scroll=contact`
-      this.$router.push({ name: 'Home', query: { scroll: 'contact' } });
+
+    // Método para manejar el scroll o la navegación
+    scrollOrNavigate(section) {
+      if (this.$route.name === 'Home') {
+        // Si estamos en la página de inicio, ejecutamos el scroll
+        if (section === 'work') {
+          this.$emit('scrollToWork'); // Emitimos un evento para hacer scroll a "Work"
+        } else if (section === 'contact') {
+          this.$emit('scrollToContact'); // Emitimos un evento para hacer scroll a "Contact"
+        }
+      } else {
+        // Si no estamos en Home, navegamos a la página de inicio y luego hacemos el scroll
+        this.$router.push({ name: 'Home' }).then(() => {
+          if (section === 'work') {
+            this.$emit('scrollToWork');
+          } else if (section === 'contact') {
+            this.$emit('scrollToContact');
+          }
+        });
+      }
     }
   }
 };

@@ -153,7 +153,7 @@
   
   @media (orientation: landscape) {
     .video-wrapper {
-      padding-bottom: 75%; /* Ajuste para landscape */
+      padding-bottom: 30%; /* Ajuste para landscape */
     }
   }
   </style>
