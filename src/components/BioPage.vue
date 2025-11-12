@@ -56,10 +56,15 @@ export default {
   },
   methods: {
     downloadCV() {
+      const fileName = 'gerardalba_cv.pdf'; // nombre exacto en public/
+      const href = `${process.env.BASE_URL || '/'}${fileName}`;
       const link = document.createElement('a');
-      link.href = '/Gerard_Alba_CV.pdf'; // Ruta relativa desde la carpeta public
-      link.download = 'Gerard_Alba_CV.pdf';
+      link.href = href;
+      link.download = fileName;
+      link.target = '_blank'; // evita bloqueos en algunos navegadores
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
     },
     handleResize() {
       this.isSmallScreen = window.innerWidth < 1000; // Actualizar si es pantalla pequeña o grande
