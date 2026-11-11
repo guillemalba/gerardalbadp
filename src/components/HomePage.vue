@@ -1,11 +1,11 @@
 <!-- HomePage.vue -->
 <template>
   <div class="home-page">
-    <LeftSidebar class="left-sidebar" />
+    <LeftSidebar v-if="!isSmallScreen" />
     <HamburgerMenu v-if="isSmallScreen" @scrollToWork="scrollToWork" @scrollToContact="scrollToContact" />
     
     <div>
-      <BackgroundVideo videoSrc="https://vimeo.com/522837592" />
+      <BackgroundVideo videoSrc="https://vimeo.com/522837592" @scrollDown="scrollToWork" />
       
       <!-- Detectamos si es una pantalla pequeña y mostramos el carousel -->
       <div v-if="isSmallScreen">
@@ -37,28 +37,32 @@
         <VideoPreview 
           id="first-video-preview" 
           ref="musicVideos"
-          title="MUSIC VIDEOS" 
+          title="MUSIC VIDEOS"
+          number="01" 
           :videoSrc="musicVideos[0].src"
           :relatedVideos="musicVideos" 
           type="music" 
           :customThumbnail="musicVideoThumbnail"
           @play-video="handlePlayVideo" />
         <VideoPreview 
-          title="COMMERCIALS" 
+          title="COMMERCIALS"
+          number="02" 
           :videoSrc="commercialVideos[0].src" 
           :relatedVideos="commercialVideos"
           type="commercial" 
           :customThumbnail="commercialThumbnail"
           @play-video="handlePlayVideo" />
         <VideoPreview 
-          title="UNDERWATER" 
+          title="UNDERWATER"
+          number="03" 
           :videoSrc="underwaterVideos[0].src" 
           :relatedVideos="underwaterVideos"
           type="underwater" 
           :customThumbnail="underwaterThumbnail"
           @play-video="handlePlayVideo" />
         <VideoPreview 
-          title="FILMS" 
+          title="FILMS"
+          number="04" 
           :videoSrc="filmVideos[0].src" 
           :relatedVideos="filmVideos" 
           type="film"
@@ -66,7 +70,7 @@
       </div>
     </div>
 
-    <RightSidebar class="right-sidebar" @scrollToWork="scrollToWork" @scrollToContact="scrollToContact" />
+    <RightSidebar v-if="!isSmallScreen" @scrollToWork="scrollToWork" @scrollToContact="scrollToContact" />
     
     <FooterPage ref="footer" /> <!-- Referencia para hacer scroll al footer -->
   </div>
@@ -146,7 +150,7 @@ export default {
     scrollToWork() {
       // Hacer scroll a la sección de "Music Videos" y ajustar la posición para que no quede tapada por el menú
       const musicSection = this.$refs.musicVideos.$el || this.$refs.musicVideos;
-      const headerHeight = document.querySelector('.hamburger-button')?.offsetHeight || 0; // Obtener la altura del header
+      const headerHeight = 0;
       const scrollPosition = musicSection.getBoundingClientRect().top + window.pageYOffset - headerHeight; // Ajustar el scroll
 
       window.scrollTo({
@@ -157,7 +161,7 @@ export default {
     scrollToContact() {
       // Hacer scroll al footer (contacto)
       const footerSection = this.$refs.footer.$el || this.$refs.footer;
-      footerSection.scrollIntoView({ behavior: 'smooth' });
+      footerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     },
     scrollBasedOnQuery() {
       // Revisa si hay un parámetro `scroll` en la URL para saber a qué sección hacer scroll
@@ -191,19 +195,9 @@ export default {
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: rgb(0, 0, 0);
+  background-color: var(--bg);
   overflow: hidden;
-  scrollbar-color: rgb(0, 47, 255) black;
 }
 
-.home-page > div {
-  flex: 1;
-}
-
-@media (max-width: 1000px) {
-  .left-sidebar,
-  .right-sidebar {
-    display: none;
-  }
-}
+.home-page > div { flex: 1; }
 </style>

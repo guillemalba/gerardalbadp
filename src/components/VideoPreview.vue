@@ -1,55 +1,47 @@
 <template>
-  <div class="video-preview" :style="{ backgroundImage: `url(${customThumbnail || thumbnail})` }">
-    <div class="overlay">
-      <h1>{{ title }}</h1>
-      <CButton icon="play" :onClick="playVideo" />
-    </div>
-    
-    <transition name="slide-fade">
-      <div v-if="showVideoList" class="video-list-container">
-        <!-- Flecha izquierda -->
-        <div class="arrow-container left-arrow-container" :class="{ invisible: !canScrollLeft }" @click="scrollLeft">
-          <span class="arrow left-arrow chevron">&#x276E;</span>
-        </div>
-        
-        <!-- Lista de videos -->
-        <div class="video-list" ref="videoList" @scroll="checkScroll">
-          <div
-            v-for="video in relatedVideos"
-            :key="video.id"
-            class="video-item"
-            :style="{ backgroundImage: `url(${video.thumbnail})` }"
-            @click="handlePlayRelatedVideo(video.src)"
-          >
-            <div class="hover-overlay">
-              <div class="video-info">
-                <p class="textfamily">{{ video.title }} / {{ video.duration }}</p>
-              </div>
-              <button class="play-button">
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="white"
-                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Flecha derecha -->
-        <div class="arrow-container right-arrow-container" :class="{ invisible: !canScrollRight }" @click="scrollRight">
-          <span class="arrow right-arrow chevron">&#x276F;</span>
-        </div>
-      </div>
-    </transition>
+  <section class="video-preview" :style="{ backgroundImage: `url(${customThumbnail || thumbnail})` }">
+    <div class="shade"></div>
 
-    <button @click="toggleVideoList" class="custom-button toggle-button" :class="{ 'moved-up': showVideoList }">
-      <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white"
-        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline :points="showVideoList ? '18 15 12 9 6 15' : '6 9 12 15 18 9'"></polyline>
-      </svg>
-      <span>{{ showVideoList ? 'Show Less' : 'Show More' }}</span>
-    </button>
-  </div>
+    <div class="overlay">
+      <p class="count label">{{ number }}<span v-if="number"> / 04</span></p>
+      <h2 class="title">{{ title }}</h2>
+      <CButton icon="play" :onClick="playVideo" :label="'Play ' + title" />
+    </div>
+
+    <div class="bottom">
+      <button @click="toggleVideoList" class="toggle label" :aria-expanded="showVideoList">
+        <span>{{ showVideoList ? 'Show less' : 'Show more' }}</span>
+        <svg class="chev" :class="{ flip: showVideoList }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </button>
+
+      <transition name="slide-fade">
+        <div v-if="showVideoList" class="strip">
+          <button class="btn-round arrow" :class="{ invisible: !canScrollLeft }" aria-label="Previous" @click="scrollLeft">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+
+          <div class="video-list" ref="videoList" @scroll="checkScroll">
+            <button
+              v-for="video in relatedVideos"
+              :key="video.id"
+              class="video-item"
+              :style="{ backgroundImage: `url(${video.thumbnail})` }"
+              @click="handlePlayRelatedVideo(video.src)"
+            >
+              <span class="item-info">
+                <span class="item-title">{{ video.title }}</span>
+                <span class="item-time label">{{ video.duration }}</span>
+              </span>
+            </button>
+          </div>
+
+          <button class="btn-round arrow" :class="{ invisible: !canScrollRight }" aria-label="Next" @click="scrollRight">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </transition>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -77,11 +69,16 @@ export default {
       type: String,
       required: true
     },
+    number: {
+      type: String,
+      default: ''
+    },
     customThumbnail: {
       type: String,
       default: '' // Permite que no sea obligatorio
     }
   },
+  emits: ['play-video'],
   data() {
     return {
       thumbnail: '',
@@ -160,308 +157,149 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  font-size: 34px;
-}
-
-.textfamily {
-  font-family: 'NewYork', serif; /* Usa la fuente para todos los títulos */
-}
-
 .video-preview {
   position: relative;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  background-color: #000;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  min-height: 800px;
-}
-
-.overlay {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-  padding: 20px;
-  z-index: 1;
-  /* Asegura que el contenido principal esté encima */
-}
-
-.video-list-container {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  justify-content: center;
-  background-color: #0000002c;
-  z-index: 999;
   overflow: hidden;
 }
 
-.video-list {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  max-width: calc(4 * 300px);
-  gap: 0px;
-  flex-grow: 1;
-}
-
-.hover-overlay {
+.shade {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.video-item:hover .hover-overlay {
-  opacity: 1;
-}
-
-.play-button {
-  position: relative;
-  top: 10%; /* Subir el botón */
-  transform: translate(0%, -60%);
-  background-color: rgba(0, 0, 0, 0);
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  border-radius: 50%;
-  padding: 10px;
-}
-
-.play-button .icon {
-  width: 25px;
-  height: 25px;
-}
-
-.video-info {
-  color: white;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.arrow {
-  cursor: pointer;
-  color: rgb(255, 255, 255);
-  font-size: 2em;
-  user-select: none;
-  padding: 0 10px;
-}
-
-.arrow:hover {
-  color: yellow;
-}
-
-.arrow-container {
-  position: relative;
-  top: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.left-arrow-container {
-  left: 0;
-}
-
-.right-arrow-container {
-  right: 0;
-}
-
-.invisible {
-  visibility: hidden;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%),
+    linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0) 40%);
   pointer-events: none;
 }
 
-.video-list::-webkit-scrollbar {
-  display: none;
+.overlay {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  text-align: center;
+  padding: 0 calc(var(--rail) + var(--gutter));
+}
+
+.count { color: var(--ink-dim); margin: 0; }
+
+.title {
+  font-size: clamp(40px, 6.5vw, 104px);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* bottom dock: toggle on top of the strip, both centred */
+.bottom {
+  position: absolute;
+  left: calc(var(--rail) + var(--gutter));
+  right: calc(var(--rail) + var(--gutter));
+  bottom: 28px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--tap);
+  padding: 0 16px;
+  background: none;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  transition: color var(--t);
+}
+.chev { width: 18px; height: 18px; transition: transform 0.35s var(--ease); }
+.chev.flip { transform: rotate(180deg); }
+
+.strip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 100%;
 }
 
 .video-list {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.chevron {
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 900;
-}
-
-.custom-button {
-  margin: 10px 0;
-  padding: 12px 24px;
-  background-color: #00000000;
-  color: #ffffff;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
   display: flex;
-  align-items: center;
-  text-transform: uppercase;
-  z-index: 1000;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  max-width: calc(4 * 280px + 3 * 10px);
+}
+.video-list::-webkit-scrollbar { display: none; }
+
+.video-item {
+  position: relative;
+  flex: 0 0 280px;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: none;
+  background-color: #111;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  text-align: left;
+  transition: transform var(--t) var(--ease), outline-color var(--t);
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+}
+.item-info {
+  width: 100%;
+  padding: 24px 12px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  color: var(--ink);
+  background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0));
+}
+.item-title {
+  font-family: var(--font-text);
+  font-size: 14px;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.item-time { font-size: 11px; letter-spacing: 0.16em; color: var(--ink-dim); flex: none; }
+
+.arrow svg { width: 20px; height: 20px; }
+.invisible { visibility: hidden; pointer-events: none; }
+
+.slide-fade-enter-active, .slide-fade-leave-active { transition: opacity 0.35s var(--ease), transform 0.35s var(--ease); }
+.slide-fade-enter-from, .slide-fade-leave-to { opacity: 0; transform: translateY(16px); }
+
+@media (hover: hover) {
+  .toggle:hover { color: var(--accent); }
+  .video-item:hover { transform: translateY(-2px); outline-color: var(--accent); }
 }
 
-.custom-button .icon {
-  margin-right: 8px;
-  width: 25px;
-  height: 25px;
-}
-
-.custom-button:hover .icon {
-  stroke: yellow;
-}
-
-.custom-button span {
-  margin-left: 8px;
-}
-
-.custom-button:hover {
-  color: yellow;
-}
-
-.toggle-button {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.toggle-button.moved-up {
-  bottom: auto;
-  top: 71%;
-  transform: translate(-50%, 40%);
-}
-
-@media (max-width: 1500px) {
-  .video-list {
-    max-width: calc(3 * 300px);
-  }
-}
-
-@media (max-width: 1200px) {
-  .video-list {
-    max-width: calc(2 * 300px);
-  }
-}
-
+@media (max-width: 1500px) { .video-list { max-width: calc(3 * 280px + 2 * 10px); } }
+@media (max-width: 1250px) { .video-list { max-width: calc(2 * 280px + 10px); } }
 @media (max-width: 1000px) {
-  .video-list {
-    max-width: calc(1 * 200px);
-  }
-
-  .video-item {
-    width: 200px;
-    height: 150px;
-    position: relative;
-    flex-shrink: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-  }
+  .video-preview { min-height: 0; }
+  .overlay, .bottom { padding-left: 0; padding-right: 0; left: var(--gutter); right: var(--gutter); }
 }
-
-@media (min-width: 1000px) {
-  .video-item {
-    width: 300px;
-    height: 150px;
-    position: relative;
-    flex-shrink: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    cursor: pointer;
-  }
-}
-
-@media (max-width: 1000px) {
-  .video-preview {
-    width: 100vw;
-    height: calc(100vw * 9 / 16);
-    min-height: auto;
-  }
-
-  .video-list {
-    flex-direction: row;
-    max-width: 100vw;
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-
-  .video-item {
-    width: 100%;
-    height: calc(100vw * 9 / 16);
-  }
-}
-
-@media (hover: none) {
-  /* Asegurarse de que los elementos con hover se mantengan visibles en dispositivos táctiles */
-  
-  /* Para el botón de "Show More" y "Show Less" */
-  .custom-button:hover {
-    color: white;
-    opacity: 1; /* Evita que desaparezca en pantallas táctiles */
-  }
-
-  .custom-button:active {
-    color: yellow; /* Cambiar el color cuando se presiona el botón en dispositivos táctiles */
-  }
-
-  /* Flechas de navegación (Chevron izquierda y derecha) */
-  .arrow:hover {
-    color: white; /* Mantén el color blanco en dispositivos táctiles */
-    opacity: 1;
-  }
-
-  .arrow:active {
-    color: yellow; /* Cambia a amarillo cuando se presiona en dispositivos táctiles */
-  }
-
-  /* Para las superposiciones (hover-overlay) en dispositivos táctiles */
-  .hover-overlay {
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.2); /* Reduce la intensidad del fondo en dispositivos táctiles */
-  }
-
-  .video-item:active .hover-overlay {
-    background: rgba(0, 0, 0, 0.6); /* Al hacer clic en el video, aumenta la opacidad */
-  }
-
-  /* Para el icono dentro del botón de "Show More"/"Show Less" */
-  .custom-button:hover .icon {
-    stroke: white; /* Mantén el color blanco para dispositivos táctiles */
-  }
-
-  .custom-button:active .icon {
-    stroke: yellow; /* Cambiar el color del icono a amarillo cuando se presiona en dispositivos táctiles */
-  }
-}
-
-
-
 </style>

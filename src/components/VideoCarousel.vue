@@ -3,11 +3,11 @@
     <!-- Encabezado del carrusel -->
     <div class="carousel-header">
       <h2>{{ title }}</h2>
+      <span class="count label">{{ String(currentIndex + 1).padStart(2, '0') }} / {{ String(relatedVideos.length).padStart(2, '0') }}</span>
 
-      <!-- Botón de cierre en la cabecera, solo cuando el video está en reproducción -->
-      <button v-if="isPlaying" class="close-button-header" @click="closeVideo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="35" height="35" fill="none" stroke="white"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button v-if="isPlaying" class="close-button-header btn-round" aria-label="Close video" @click="closeVideo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+          stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -36,13 +36,12 @@
               <div v-else class="thumbnail" :style="{ backgroundImage: `url(${video.thumbnail || defaultThumbnail})` }"
                 @click="goToMobileVideoDetail(video)">
                 <div class="overlay">
-                  <div class="video-info">{{ video.title }}</div>
-                  <button class="play-button" @click.stop="playVideo(index)">
-                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" stroke="white"
-                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  <button class="play-button" :aria-label="'Play ' + (video.title || title)" @click.stop="playVideo(index)">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <polygon points="8 5 19 12 8 19"></polygon>
                     </svg>
                   </button>
+                  <div class="video-info">{{ video.title }}</div>
                 </div>
               </div>
             </div>
@@ -53,9 +52,9 @@
 
     <!-- Dots para indicar el video actual -->
     <div class="carousel-dots">
-      <span v-for="(video, index) in relatedVideos" :key="index" :class="{ 'active': index === currentIndex }"
-        @click="goToSlide(index)">
-      </span>
+      <button v-for="(video, index) in relatedVideos" :key="index" :class="{ 'active': index === currentIndex }"
+        :aria-label="'Video ' + (index + 1)" @click="goToSlide(index)">
+      </button>
     </div>
   </div>
 </template>
@@ -169,74 +168,33 @@ export default {
   position: relative;
   width: 100%;
   overflow: hidden;
+  background: var(--bg);
+  padding-bottom: 8px;
+  border-top: 1px solid var(--line);
 }
-
-.video-container-wrapper.fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 9999;
-  background-color: black;
-}
-
-.fullscreen-button {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  z-index: 10000;
-  background-color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.carousel-container {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-}
+.carousel-container:first-of-type { border-top: none; }
 
 .carousel-header {
+  position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  background-color: #000000;
-  color: white;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px var(--gutter) 16px;
+  min-height: 64px;
 }
-
 .carousel-header h2 {
-  margin: 0;
-  text-align: center;
-  font-size: 20px; /* Ajustamos el tamaño del título */
+  font-size: 28px;
+  line-height: 1;
+  text-transform: uppercase;
 }
+.count { color: var(--ink-dim); font-size: 11px; }
 
 .close-button-header {
-  background-color: rgba(255, 0, 0, 0);
-  border: none;
-  color: white;
-  font-size: 35px;
-  cursor: pointer;
-  z-index: 10;
   position: absolute;
-  right: 0px; /* Colocar el botón a la derecha */
-}
-
-/* Desactivar scroll vertical cuando está en modo reproducción */
-.carousel.is-playing {
-  overflow-y: hidden;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-
-  /* Ocultamos el scroll horizontal */
-  scrollbar-width: none; /* Firefox */
-}
-
-.carousel.is-playing::-webkit-scrollbar {
-  display: none; /* Chrome, Safari y Edge */
+  right: var(--gutter);
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .carousel {
@@ -244,25 +202,17 @@ export default {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-
-  /* Ocultamos el scroll horizontal */
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
 }
+.carousel::-webkit-scrollbar { display: none; }
+.carousel.is-playing { overflow-y: hidden; }
 
-.carousel::-webkit-scrollbar {
-  display: none; /* Chrome, Safari y Edge */
-}
-
-.carousel-track {
-  display: flex;
-}
+.carousel-track { display: flex; }
 
 .carousel-slide {
   flex: 0 0 100%;
   scroll-snap-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 0 var(--gutter);
 }
 
 .video-container-wrapper {
@@ -270,14 +220,13 @@ export default {
   padding-top: 56.25%;
   position: relative;
 }
-
 .video-container {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  overflow: hidden;
+  background: #111;
 }
+.video-container iframe { display: block; }
 
 .thumbnail {
   width: 100%;
@@ -289,91 +238,75 @@ export default {
 }
 
 .overlay {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  gap: 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0.2) 60%);
 }
 
 .play-button {
-  background-color: rgba(0, 0, 0, 0);
-  border: none;
-  color: white;
-  font-size: 38px;
+  width: 64px;
+  height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(243, 240, 234, 0.5);
+  border-radius: 50%;
   cursor: pointer;
+  transition: transform var(--t) var(--ease), background var(--t), color var(--t);
 }
-
-.play-button .icon {
-  width: 38px;
-  height: 38px;
-}
+.play-button:active { transform: scale(0.94); background: var(--accent); color: #000; border-color: var(--accent); }
+.play-button .icon { width: 26px; height: 26px; margin-left: 3px; }
 
 .video-info {
-  color: white;
-  text-align: center;
-  margin-bottom: 20px; /* Ajusta este valor para mover el título más arriba */
-  font-family: 'NewYork', serif;
-  font-size: 18px;
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 12px;
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 15px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .carousel-dots {
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 14px;
 }
-
-.carousel-dots span {
-  display: inline-block;
-  height: 7px;
-  width: 7px;
-  border-radius: 50%;
-  background-color: #333;
-  margin: 0 5px;
+.carousel-dots button {
+  /* 44px tap area, 6px visible dot */
+  width: 28px;
+  height: var(--tap);
+  padding: 0;
+  background: none;
+  border: none;
   cursor: pointer;
+  position: relative;
 }
-
-.carousel-dots .active {
-  background-color: white;
+.carousel-dots button::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 6px; height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  transition: background var(--t), transform var(--t) var(--ease);
 }
+.carousel-dots button.active::after { background: var(--ink); transform: scale(1.3); }
 
-/* Ajustes responsivos para pantallas con altura menor a 500px */
 @media (max-height: 500px) {
-  .carousel-header h2 {
-    font-size: 20px; /* Reducimos el tamaño del título */
-  }
-
-  .video-container-wrapper {
-    padding-top: 30%; /* Ajustamos la proporción del video */
-  }
-
-  .play-button .icon {
-    width: 28px; /* Reducimos el tamaño del botón de play */
-    height: 28px;
-  }
-
-  .video-info {
-    font-size: 14px; /* Reducimos el tamaño del título de los videos */
-    margin-bottom: 10px; /* Reducimos el margen del título */
-  }
-
-  .carousel-dots span {
-    height: 5px; /* Reducimos el tamaño de los dots */
-    width: 5px;
-  }
-
-  .carousel-dots {
-    margin-top: 5px; /* Reducimos el margen superior de los dots */
-    margin-bottom: 5px; /* Reducimos el margen inferior de los dots */
-  }
-
-  .close-button-header {
-    left: 450px; /* Colocamos el botón a la izquierda */
-  }
+  .carousel-header { padding-top: 16px; }
 }
 </style>

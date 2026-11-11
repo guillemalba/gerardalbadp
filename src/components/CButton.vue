@@ -1,12 +1,10 @@
 <template>
-  <button @click="onClick" class="custom-button3" :class="additionalClass">
-    <svg class="icon3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-      <!-- Rellenar el icono de play -->
-      <polygon v-if="icon === 'play'" points="5 3 19 12 5 21"></polygon>
-      <!-- El icono de plus sin relleno, solo líneas -->
+  <button @click="onClick" class="play" :class="additionalClass" :aria-label="label">
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
+      <polygon v-if="icon === 'play'" points="8 5 19 12 8 19"></polygon>
       <template v-else-if="icon === 'plus'">
-        <line x1="12" y1="5" x2="12" y2="19"></line>
-        <line x1="5" y1="12" x2="19" y2="12"></line>
+        <rect x="11" y="5" width="2" height="14"></rect>
+        <rect x="5" y="11" width="14" height="2"></rect>
       </template>
     </svg>
   </button>
@@ -25,6 +23,10 @@ export default {
       type: Function,
       required: true
     },
+    label: {
+      type: String,
+      default: 'Play'
+    },
     additionalClass: {
       type: String,
       default: ''
@@ -34,30 +36,26 @@ export default {
 </script>
 
 <style scoped>
-.custom-button3 {
-  padding: 12px;
-  background-color: transparent; /* Sin fondo */
-  color: #ffffff; /* El color del icono */
-  font-size: 16px;
-  cursor: pointer;
-  border: none; /* Sin borde */
-  display: flex;
+.play {
+  width: 88px;
+  height: 88px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  text-transform: uppercase;
-  transition: transform 0.3s ease; /* Transición suave para el hover */
-  z-index: 1000;
+  padding: 0;
+  color: var(--ink);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(243, 240, 234, 0.5);
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: transform var(--t) var(--ease), background var(--t), color var(--t), border-color var(--t);
 }
+.icon { width: 34px; height: 34px; margin-left: 4px; }
+.play:active { transform: scale(0.94); }
 
-.custom-button3 .icon3 {
-  width: 35px;
-  height: 35px;
-}
-
-.custom-button3:hover {
-  transform: scale(1.5); /* Hacer el botón más grande al hacer hover */
-  color: yellow;
-
+@media (hover: hover) {
+  .play:hover { transform: scale(1.06); background: var(--accent); border-color: var(--accent); color: #000; }
 }
 </style>

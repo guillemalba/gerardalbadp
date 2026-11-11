@@ -1,41 +1,32 @@
 <template>
-  <div class="right-sidebar">
-    <!-- Contenido del Right Sidebar -->
-    <div class="vertical-text">
-      <h2 @click="scrollOrNavigate('contact')">Contact</h2>
-      <h2 @click="goToBio">Bio</h2>
-      <h2 @click="scrollOrNavigate('work')">Work</h2>
-    </div>
-  </div>
+  <nav class="rail rail-right" aria-label="Main">
+    <ul>
+      <li>
+        <a class="label" :class="{ active: $route.name === 'Bio' }" href="#/bio" @click.prevent="goToBio">Bio</a>
+      </li>
+      <li>
+        <a class="label" href="#/" @click.prevent="scrollOrNavigate('work')">Work</a>
+      </li>
+      <li>
+        <a class="label" href="#/" @click.prevent="scrollOrNavigate('contact')">Contact</a>
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <script>
 export default {
   name: 'RightSidebar',
+  emits: ['scrollToWork', 'scrollToContact'],
   methods: {
-    // Método para navegar a Bio
     goToBio() {
       this.$router.push({ name: 'Bio' });
     },
-
-    // Método para manejar el scroll o la navegación
     scrollOrNavigate(section) {
       if (this.$route.name === 'Home') {
-        // Si estamos en la página de inicio, ejecutamos el scroll
-        if (section === 'work') {
-          this.$emit('scrollToWork'); // Emitimos un evento para hacer scroll a "Work"
-        } else if (section === 'contact') {
-          this.$emit('scrollToContact'); // Emitimos un evento para hacer scroll a "Contact"
-        }
+        this.$emit(section === 'work' ? 'scrollToWork' : 'scrollToContact');
       } else {
-        // Si no estamos en Home, navegamos a la página de inicio y luego hacemos el scroll
-        this.$router.push({ name: 'Home' }).then(() => {
-          if (section === 'work') {
-            this.$emit('scrollToWork');
-          } else if (section === 'contact') {
-            this.$emit('scrollToContact');
-          }
-        });
+        this.$router.push({ name: 'Home', query: { scroll: section } });
       }
     }
   }
@@ -43,65 +34,61 @@ export default {
 </script>
 
 <style scoped>
-.right-sidebar {
-  width: 20px;
-  background-color: #00000000;
+.rail {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--rail);
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  position: fixed;
-  right: 0;
   z-index: 1000;
-  border: none;
-  box-shadow: none;
-  cursor: pointer;
+  pointer-events: none;
 }
 
-.vertical-text {
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: end;
-  color: rgb(255, 255, 255);
-  height: 100%;
+  flex-direction: column;   /* Contact · Work · Bio read bottom→top, same as the name on the left */
+  gap: 8px;
+}
+
+a {
+  pointer-events: auto;
+  display: block;
+  writing-mode: vertical-rl;
   transform: rotate(180deg);
   white-space: nowrap;
+  color: var(--ink-dim);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.4em;
+  padding: 18px 14px;
+  position: relative;
+  transition: color var(--t);
 }
 
-.vertical-text h2 {
-  margin-bottom: 15vh;
-  writing-mode: vertical-rl;
-  transition: font-size 0.3s ease; /* Transición suave al cambiar tamaño */
-  color: white; /* Texto blanco por defecto */
-  cursor: pointer;
+a.active { color: var(--ink); }
+
+a::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 12px;
+  bottom: 12px;
+  width: 1px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s var(--ease);
 }
+a.active::after { transform: scaleY(1); }
 
-.vertical-text h2:hover {
-  color: yellow; /* Cambiar a texto amarillo al hacer hover */
+@media (hover: hover) {
+  a:hover { color: var(--accent); }
+  a:hover::after { transform: scaleY(1); }
 }
-
-@media (max-width: 1000px) {
-  .vertical-text h2 {
-    margin-bottom: 10vh; /* Reducimos el espacio entre los textos */
-  }
-}
-
-@media (max-width: 600px) {
-  .vertical-text h2 {
-    margin-bottom: 8vh; /* Reducimos el espacio entre textos en pantallas muy pequeñas */
-  }
-}
-
-@media (hover: none) {
-  .vertical-text h2:hover {
-    color: white; /* Mantiene el color original en dispositivos táctiles */
-    opacity: 1; /* Asegurarse de que el texto no desaparezca */
-  }
-
-  .vertical-text h2:active {
-    color: yellow; /* Cambiar el color solo cuando se presiona el texto en dispositivos táctiles */
-  }
-}
-
 </style>

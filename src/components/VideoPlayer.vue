@@ -1,79 +1,60 @@
-<!-- VideoPlayer -->
 <template>
   <div class="video-player-page">
     <LeftSidebar />
-    <div class="main-content">
-      <!-- Botón de cierre usando SVG en lugar de la entidad de texto -->
-      <button class="close-button" @click="redirectToHomePage">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="55" height="55" fill="none" stroke="white"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-      <h1>{{ sectionTitle }}</h1>
-      <div class="video-content">
-        <div class="arrow-container left-arrow-container" :class="{ invisible: currentVideoIndex === 0 }"
-          @click="playPreviousVideo">
-          <span class="arrow chevron">&#x276E;</span>
-        </div>
-        <div class="video-and-details">
-          <div class="video-container" ref="videoContainer">
-            <iframe :src="videoEmbedUrl" frameborder="0" allow="autoplay; fullscreen" allowfullscreen
-              @load="updateHeights"></iframe>
-          </div>
-          <div class="video-details" ref="videoDetails">
-            <h1>{{ videoTitle }}</h1>
-            <div v-html="videoDescription" class="video-description"></div>
-            <ul class="video-credits">
-              <li><strong>Director:</strong> {{ videoDirector }}</li>
-              <li><strong>Producer:</strong> {{ videoProducer }}</li>
-              <li><strong>Duration:</strong> {{ videoDuration }}</li>
-            </ul>
-          </div>
-        </div>
-        <div class="arrow-container right-arrow-container"
-          :class="{ invisible: currentVideoIndex === relatedVideos.length - 1 }" @click="playNextVideo">
-          <span class="arrow chevron">&#x276F;</span>
-        </div>
-      </div>
-      <div class="related-videos">
-        <div class="video-list-container">
-          <div class="arrow-container left-arrow-container" :class="{ invisible: !canScrollLeftRelated }"
-            @click="scrollLeftRelated">
-            <span class="arrow left-arrow chevron">&#x276E;</span>
-          </div>
-          <div class="video-list" ref="videoList">
-            <div v-for="(video, index) in relatedVideos" :key="video.id" class="video-item"
-              :class="{ 'active-video': currentVideoIndex === index }"
-              :style="{ backgroundImage: `url(${video.thumbnail})` }" @click="handlePlayRelatedVideo(video.src, index)">
-              <div class="hover-overlay">
-                <div class="video-info">
-                  <p class="textfamily">{{ video.title }} / {{ video.duration }}</p>
-                </div>
-                <button class="play-button">
-                  <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
-                  </svg>
-                </button>
-              </div>
-              <div v-if="currentVideoIndex === index" class="playing-indicator">
-                Playing
-              </div>
-            </div>
-          </div>
-          <div class="arrow-container right-arrow-container" :class="{ invisible: !canScrollRightRelated }"
-            @click="scrollRightRelated">
-            <span class="arrow right-arrow chevron">&#x276F;</span>
-          </div>
-        </div>
-      </div>
-    </div>
     <RightSidebar />
+
+    <main class="main-content">
+      <header class="head">
+        <div>
+          <p class="label kicker">Now playing</p>
+          <h2 class="section-title">{{ sectionTitle }}</h2>
+        </div>
+        <button class="close-button btn-round" aria-label="Close" @click="redirectToHomePage">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </header>
+
+      <div class="video-content">
+        <div class="video-container" ref="videoContainer">
+          <iframe :src="videoEmbedUrl" frameborder="0" allow="autoplay; fullscreen" allowfullscreen
+            @load="updateHeights"></iframe>
+        </div>
+        <div class="video-details" ref="videoDetails">
+          <h1>{{ videoTitle }}</h1>
+          <div v-html="videoDescription" class="video-description"></div>
+          <ul class="video-credits">
+            <li><span class="label">Director</span>{{ videoDirector }}</li>
+            <li><span class="label">Producer</span>{{ videoProducer }}</li>
+            <li><span class="label">Duration</span>{{ videoDuration }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="related-videos">
+        <button class="btn-round arrow" :class="{ invisible: !canScrollLeftRelated }" aria-label="Previous" @click="scrollLeftRelated">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <div class="video-list" ref="videoList">
+          <button v-for="(video, index) in relatedVideos" :key="video.id" class="video-item"
+            :class="{ 'active-video': currentVideoIndex === index }"
+            :style="{ backgroundImage: `url(${video.thumbnail})` }" @click="handlePlayRelatedVideo(video.src, index)">
+            <span class="item-info">
+              <span class="item-title">{{ video.title }}</span>
+              <span class="item-time label">{{ currentVideoIndex === index ? 'Playing' : video.duration }}</span>
+            </span>
+          </button>
+        </div>
+        <button class="btn-round arrow" :class="{ invisible: !canScrollRightRelated }" aria-label="Next" @click="scrollRightRelated">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+    </main>
   </div>
 </template>
-
 
 <script>
 import LeftSidebar from './LeftSidebar.vue';
@@ -274,331 +255,130 @@ export default {
 </script>
 
 <style scoped>
-.textfamily {
-  font-family: 'NewYork', serif; /* Usa la fuente para todos los títulos */
-}
-
 .video-player-page {
-  display: flex;
-  background-color: #000;
-  color: #fff;
-  padding-left: 75px;
-  padding-right: 75px;
-  height: 100vh;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
 }
 
 .main-content {
+  max-width: 1500px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 40px calc(var(--rail) + var(--gutter)) 48px;
   display: flex;
   flex-direction: column;
-  flex: 1;
-  align-items: center;
-  position: relative;
+  gap: 28px;
+  justify-content: center;
 }
 
-.close-button {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: transparent;
-  border: none;
-  font-size: 55px;
-  color: rgb(255, 255, 255);
-  cursor: pointer;
-  z-index: 10000;
-  transition: color 0.3s ease;
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
 }
-
-.close-button svg {
-  width: 35px;
-  height: 35px;
-  transition: stroke 0.3s ease; /* Transición suave para el cambio de color del icono */
-}
-
-.close-button:hover svg {
-  stroke: yellow; /* Cambiar a amarillo al hacer hover */
-}
+.kicker { color: var(--ink-dim); margin: 0 0 10px; }
+.section-title { font-size: clamp(28px, 3.2vw, 44px); line-height: 1; text-transform: uppercase; }
 
 .video-content {
-  display: flex;
-  width: 100%;
-  max-width: 1500px;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  position: relative;
-  padding-left: 50px;
-  padding-right: 50px;
-}
-
-.video-and-details {
-  display: flex;
-  flex-grow: 1;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+  gap: 24px;
+  align-items: start;
 }
 
 .video-container {
-  flex: 0 0 70%;
   position: relative;
-  background-color: rgba(0, 0, 0, 0.8);
+  background: #0d0d0d;
 }
-
-.video-container::after {
-  content: '';
-  display: block;
-  padding-bottom: 56.25%;
-}
-
+.video-container::after { content: ''; display: block; padding-bottom: 56.25%; }
 .video-container iframe {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: none;
 }
 
 .video-details {
-  flex: 0 0 30%;
-  background-color: rgba(27, 27, 27, 0.8);
-  padding: 20px;
-  border-radius: 10px;
-  box-sizing: border-box;
+  padding: 4px 0 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  gap: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
 }
-
-.video-details h1 {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.video-description {
-  margin-bottom: 20px;
-  white-space: pre-wrap;
-}
-
-.video-credits {
-  list-style: none;
-  padding: 0;
-}
-
+.video-details h1 { font-size: 26px; line-height: 1.15; }
+.video-description { font-family: var(--font-text); font-size: 15px; line-height: 1.6; color: var(--ink-dim); }
+.video-credits { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
 .video-credits li {
-  margin-bottom: 10px;
-}
-
-.video-credits strong {
-  color: #ccc;
-}
-
-.related-videos {
-  width: 100%;
-  margin-top: 50px;
-  box-sizing: border-box;
-  padding-left: 50px;
-  padding-right: 50px;
-}
-
-.related-videos h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.video-list-container {
   display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: center;
-  background-color: #0000002c;
-  overflow: hidden;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-text);
+  font-size: 15px;
 }
+.video-credits .label { font-size: 11px; color: var(--ink-dim); align-self: center; }
 
+.related-videos { display: flex; align-items: center; gap: 14px; }
 .video-list {
   display: flex;
+  gap: 10px;
   overflow-x: auto;
   scroll-behavior: smooth;
-  max-width: calc(4 * 300px);
-  gap: 0px;
-  flex-grow: 1;
+  scrollbar-width: none;
+  flex: 1;
+  min-width: 0;
 }
+.video-list::-webkit-scrollbar { display: none; }
 
 .video-item {
   position: relative;
-  width: 300px;
-  height: 150px;
-  flex-shrink: 0;
+  flex: 0 0 clamp(200px, 22vw, 280px);
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  border: none;
+  background-color: #111;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
   cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  text-align: left;
+  outline: 1px solid transparent;
+  outline-offset: -1px;
+  transition: transform var(--t) var(--ease), outline-color var(--t), opacity var(--t);
 }
-
-.playing-indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
+.video-item:not(.active-video) { opacity: 0.8; }
+.video-item.active-video { outline-color: var(--accent); opacity: 1; }
+.item-info {
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.678);
+  padding: 24px 12px 10px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 20px;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0));
+}
+.item-title { font-family: var(--font-text); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-time { font-size: 11px; letter-spacing: 0.16em; color: var(--ink-dim); flex: none; }
+.video-item.active-video .item-time { color: var(--accent); }
+
+.arrow svg { width: 20px; height: 20px; }
+.invisible { visibility: hidden; pointer-events: none; }
+
+@media (hover: hover) {
+  .video-item:hover { transform: translateY(-2px); opacity: 1; }
 }
 
-.hover-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+@media (max-width: 1000px) {
+  .main-content { padding-left: var(--gutter); padding-right: var(--gutter); }
+  .video-content { grid-template-columns: 1fr; }
+  .video-details { height: auto !important; }
 }
-
-.video-item:hover .hover-overlay {
-  opacity: 1;
-}
-
-.play-button {
-  position: relative;
-  top: 10%;
-  transform: translate(0%, -60%);
-  background-color: rgba(0, 0, 0, 0);
-  border: none;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  border-radius: 50%;
-  padding: 10px;
-}
-
-.play-button .icon {
-  width: 25px;
-  height: 25px;
-}
-
-.video-info {
-  color: white;
-  text-align: center;
-  margin-top: 10px;
-}
-
-.arrow {
-  cursor: pointer;
-  color: white;
-  font-size: 2em;
-  user-select: none;
-  padding: 0 10px;
-}
-
-.arrow:hover {
-  color: yellow;
-}
-
-.arrow-container {
-  position: relative;
-  top: 0;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.left-arrow-container {
-  left: 0;
-}
-
-.right-arrow-container {
-  right: 0;
-}
-
-.invisible {
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.video-list::-webkit-scrollbar {
-  display: none;
-}
-
-.video-list {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.chevron {
-  font-family: 'Font Awesome 5 Free';
-  font-weight: 900;
-}
-
-
-
-@media (max-width: 1500px) {
-  .video-list {
-    max-width: calc(3 * 300px); /* Ancho máximo para mostrar 3 videos a la vez */
-  }
-}
-
-@media (max-width: 1200px) {
-  .video-list {
-    max-width: calc(2 * 300px); /* Ancho máximo para mostrar 2 videos a la vez */
-  }
-}
-
-
-@media (hover: none) {
-  /* Asegúrate de que el botón no desaparezca en dispositivos táctiles */
-  .custom-button:hover {
-    color: white;
-    opacity: 1; /* Evita que desaparezca en pantallas táctiles */
-  }
-
-  .custom-button:active {
-    color: yellow; /* Cambiar el color del texto cuando se presiona en dispositivos táctiles */
-  }
-
-  /* Flechas de navegación (Chevron izquierda y derecha) */
-  .arrow:hover {
-    color: white; /* Mantén el color blanco en dispositivos táctiles */
-    opacity: 1;
-  }
-
-  .arrow:active {
-    color: yellow; /* Cambia a amarillo cuando se presiona en dispositivos táctiles */
-  }
-
-  /* Para las superposiciones (hover-overlay) en dispositivos táctiles */
-  .hover-overlay {
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.2); /* Reduce la intensidad del fondo en dispositivos táctiles */
-  }
-
-  .video-item:active .hover-overlay {
-    background: rgba(0, 0, 0, 0.6); /* Al hacer clic en el video, aumenta la opacidad */
-  }
-
-  /* Para el icono dentro del botón de "Show More"/"Show Less" */
-  .custom-button .icon {
-    stroke: white; /* Mantén el color blanco por defecto para dispositivos táctiles */
-    transition: stroke 0.2s ease; /* Añadir una transición para suavizar el cambio de color */
-  }
-
-  .custom-button:active .icon {
-    stroke: yellow; /* Cambia a amarillo mientras se presiona el botón en dispositivos táctiles */
-  }
-
-  /* Volver a blanco después de que el clic ha terminado */
-  .custom-button:not(:active) .icon {
-    stroke: white; /* Volver a blanco una vez que se suelta el botón */
-  }
-}
-
 </style>

@@ -1,39 +1,29 @@
 <template>
   <div class="bio-page">
-    <!-- Mostramos el HamburguerMenu si es pantalla pequeña -->
-    <HamburgerMenu 
-      v-if="isSmallScreen" 
-      @scrollToWork="goToWorkFromBio" 
-      @scrollToContact="goToContactFromBio" 
-    />
-    
-    <!-- Si no es pantalla pequeña, mostramos las barras laterales -->
-    <LeftSidebar v-else class="left-sidebar" @navigateWork="goToWorkFromBio" @navigateContact="goToContactFromBio" />
-    
-    <div class="content-container">
-      <div class="content">
-        <div class="profile-picture"></div>
-        <!-- Imagen de perfil en un círculo -->
-        
-        <h1>About Me</h1>
-        <p>
-          Gerard Alba is a Director of Photography from Granollers, Barcelona, with a lifelong love for visual storytelling. He trained in Cinematography at the New York Film Academy in Los Angeles and has been putting his skills to work on a variety of projects since graduating in 2016.
+    <HamburgerMenu v-if="isSmallScreen" @scrollToWork="goToWorkFromBio" @scrollToContact="goToContactFromBio" />
+    <template v-else>
+      <LeftSidebar />
+      <RightSidebar />
+    </template>
+
+    <main class="bio">
+      <div class="portrait" role="img" aria-label="Gerard Alba"></div>
+
+      <div class="text">
+        <p class="label kicker">About</p>
+        <h1>Gerard Alba</h1>
+        <p class="lead">
+          Director of Photography from Granollers, Barcelona, with a lifelong love for visual storytelling. Trained in Cinematography at the New York Film Academy in Los Angeles and working on projects since graduating in 2016.
         </p>
         <p>
           Gerard has been involved in films, music videos, and commercials, including a notable role in the camera department for the third season of Narcos. Whether he’s directing, handling the camera, or working with a steadicam, Gerard brings a thoughtful approach to lighting that really enhances the look of his projects. He’s also passionate about underwater photography, which adds a unique flair to his work.
         </p>
         <p>
-          Known for his enthusiastic and positive attitude, Gerard is excited to dive into fresh creative projects.
+          Known for his enthusiastic and positive attitude, Gerard is excited to dive into fresh creative projects. If you’re looking for a DP with a skill for storytelling, lighting, and a creative touch above and below the water, let’s connect and see what we can create together.
         </p>
-        <p>
-          If you’re looking for a DP with a skill for storytelling, lighting, and a creative touch above and below the water, let’s connect and see what we can create together.
-        </p>
-        <button @click="downloadCV">Download CV</button>
+        <button class="btn-pill" @click="downloadCV">Download CV</button>
       </div>
-    </div>
-
-    <!-- Si no es pantalla pequeña, mostramos las barras laterales -->
-    <RightSidebar v-if="!isSmallScreen" class="right-sidebar" @navigateWork="goToWorkFromBio" @navigateContact="goToContactFromBio" />
+    </main>
   </div>
 </template>
 
@@ -90,117 +80,76 @@ export default {
 <style scoped>
 .bio-page {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  background-color: rgb(0, 0, 0);
-  color: white;
-  height: 100vh;
-  background-image: url('@/assets/images/bio_bg2.png');
-  background-size: cover;
-  background-position: center;
-  overflow: auto;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
 }
 
-.content-container {
-  margin: 20px; /* Agregar margen para evitar que llegue a los bordes */
-  padding: 20px;
-  background-color: rgba(0, 0, 0, 0.7);
-  border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
-  max-width: 90vw;
-  text-align: center;
-  backdrop-filter: blur(10px);
+.bio {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  padding-left: var(--rail);
+  padding-right: var(--rail);
 }
 
-@media (min-width: 1000px) {
-  .content-container {
-    max-width: 800px;
-    margin: auto; /* Centrar el contenido en pantallas más grandes */
-    padding: 40px;
-  }
-}
-
-@media (max-width: 1000px) {
-  .content-container {
-    margin: 40px; /* Margen de 20px en pantallas pequeñas */
-    padding: 20px;
-  }
-}
-
-
-.content {
-  padding: 20px;
-}
-
-h1 {
-  margin-bottom: 20px;
-  font-size: 2.5em;
-}
-
-p {
-  margin-bottom: 20px;
-  font-size: 1.1em;
-  line-height: 1.6;
-}
-
-button {
-  padding: 12px 24px;
-  background-color: #ffffff; /* Amarillo clarito */
-  color: #000000;
-  border: none;
-  border-radius: 50px;
-  font-size: 1em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: yellow; /* Amarillo más fuerte en hover */
-}
-
-/* Estilos para la imagen de perfil */
-.profile-picture {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
+.portrait {
+  position: relative;
+  min-height: 100vh;
   background-image: url('@/assets/images/bio_profile.png');
   background-size: cover;
   background-position: center;
-  margin: 0 auto 20px; /* Centra el círculo y añade margen inferior */
+}
+.portrait::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(5,5,5,0) 60%, var(--bg) 100%);
 }
 
-/* Ajustes responsive para ocultar las barras laterales en pantallas pequeñas */
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  padding: 96px var(--gutter) 96px clamp(24px, 4vw, 64px);
+  max-width: 640px;
+}
+
+.kicker { color: var(--ink-dim); margin: 0; }
+
+h1 {
+  font-size: clamp(44px, 6vw, 96px);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+p { margin: 0; font-size: 17px; line-height: 1.65; color: var(--ink-dim); }
+.lead { font-size: 21px; color: var(--ink); }
+
+.btn-pill { margin-top: 12px; }
+
 @media (max-width: 1000px) {
-  .left-sidebar,
-  .right-sidebar {
-    display: none;
+  .bio {
+    grid-template-columns: 1fr;
+    padding: 0;
   }
-}
-
-/* Ajustes responsive para móviles */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 2em;
+  .portrait {
+    min-height: 0;
+    height: 62vh;
+    background-position: center 25%;
   }
-
-  p {
-    font-size: 1em;
+  .portrait::after { background: linear-gradient(to bottom, rgba(5,5,5,0) 55%, var(--bg) 100%); }
+  .text {
+    max-width: none;
+    padding: 8px var(--gutter) 72px;
+    margin-top: -48px;
+    position: relative;
   }
-
-  button {
-    font-size: 0.9em;
-    padding: 10px 20px;
-  }
-
-  .profile-picture {
-    width: 120px;
-    height: 120px;
-  }
-}
-
-@media (hover: none) {
-  button:hover {
-    background-color: #ffffff; /* Mantén el color original en dispositivos táctiles */
-  }
+  .btn-pill { align-self: stretch; justify-content: center; }
+  p { font-size: 16px; }
+  .lead { font-size: 19px; }
 }
 </style>

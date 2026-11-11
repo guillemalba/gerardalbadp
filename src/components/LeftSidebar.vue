@@ -1,10 +1,7 @@
 <template>
-  <div class="left-sidebar">
-    <!-- Contenido del Left Sidebar -->
-    <div class="vertical-text">
-      <h2 @click="goToHome">Gerard Alba</h2>
-    </div>
-  </div>
+  <aside class="rail rail-left">
+    <a class="name label" href="#/" @click.prevent="goToHome">Gerard Alba</a>
+  </aside>
 </template>
 
 <script>
@@ -12,13 +9,7 @@ export default {
   name: 'LeftSidebar',
   methods: {
     goToHome() {
-      // Redirige a la página de inicio
-      this.$router.push({ name: 'Home' });
-      this.scrollToTop();
-    },
-    scrollToTop() {
-      // Desplazarse al principio de la página
-      this.$nextTick(() => {
+      this.$router.push({ name: 'Home' }).then(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     }
@@ -27,50 +18,48 @@ export default {
 </script>
 
 <style scoped>
-.left-sidebar {
-  width: 20px; /* Ajusta el ancho según tus necesidades */
-  background-color: #00000000;
+.rail {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: var(--rail);
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Asegura que la barra ocupe toda la altura de la pantalla */
-  position: fixed; /* Fija la barra en su lugar */
-  left: 0; /* Alinea la barra a la izquierda */
-  z-index: 1000; /* Asegura que la barra esté encima de otros contenidos */
-  border: none; /* Elimina cualquier borde */
-  box-shadow: none; /* Elimina cualquier sombra */
+  z-index: 1000;
+  pointer-events: none;
 }
+.rail-left { left: 0; }
 
-.vertical-text {
-  display: flex;
-  align-items: center;
-  color: rgb(255, 255, 255);
-  justify-content: center;
-  height: auto; /* Asegura que el contenedor ocupe toda la altura de la barra */
-  transform: rotate(-90deg); /* Rota el contenedor para que el texto se muestre verticalmente */
+.name {
+  pointer-events: auto;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
   white-space: nowrap;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.4em;
+  padding: 18px 12px;
+  position: relative;
+  transition: color var(--t);
+}
+.name::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.4s var(--ease);
+  translate: 14px 0;
 }
 
-.vertical-text h2 {
-  margin: 0; /* Elimina el margen para centrar el texto */
-  cursor: pointer;
-  color: white; /* Texto blanco por defecto */
-  transition: color 0.3s ease; /* Transición suave de color */
+@media (hover: hover) {
+  .name:hover { color: var(--accent); }
+  .name:hover::after { transform: scaleY(1); }
 }
-
-.vertical-text h2:hover {
-  color: yellow; /* Cambiar a texto amarillo al hacer hover */
-}
-
-@media (hover: none) {
-  .vertical-text h2:hover {
-    color: white; /* Mantiene el color original en dispositivos táctiles */
-    opacity: 1; /* Asegurarse de que el texto no desaparezca */
-  }
-
-  .vertical-text h2:active {
-    color: yellow; /* Cambiar el color solo cuando se presiona el texto en dispositivos táctiles */
-  }
-}
-
 </style>
