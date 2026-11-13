@@ -1,40 +1,30 @@
-import { createRouter, createWebHashHistory } from 'vue-router'; // Cambia a hash history
-import HomePage from './components/HomePage.vue';
-import VideoPlayer from './components/VideoPlayer.vue';
-import BioPage from './components/BioPage.vue';
-import MobileVideoDetail from './components/MobileVideoDetail.vue';
+import { createRouter, createWebHashHistory } from 'vue-router';
+import HomeView from './views/HomeView.vue';
+import ProjectView from './views/ProjectView.vue';
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: HomePage,
-  },
-  {
-    path: '/video',
-    name: 'VideoPlayer',
-    component: VideoPlayer,
-    props: route => ({ videoSrc: route.query.videoSrc })
-  },
-  {
-    path: '/bio',
-    name: 'Bio',
-    component: BioPage
-  },
-  {
-    path: '/video-detail/:sectionTitle/:id',
-    name: 'MobileVideoDetail',
-    component: MobileVideoDetail,
-    props: route => ({
-      videoId: route.params.id,
-      sectionTitle: route.params.sectionTitle
-    })
-  }
+  { path: '/', name: 'Home', component: HomeView },
+  { path: '/work/:id', name: 'Project', component: ProjectView, props: true },
+  // Old links keep working
+  { path: '/bio', redirect: { name: 'Home', hash: '#about' } },
+  { path: '/video', redirect: to => ({ name: 'Project', params: { id: String(to.query.videoSrc || '').split('/').pop() } }) },
+  { path: '/video-detail/:sectionTitle/:id', redirect: to => ({ name: 'Project', params: { id: to.params.id } }) },
+  { path: '/:pathMatch(.*)*', redirect: { name: 'Home' } },
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(), // Usar hash history en lugar de web history
+  history: createWebHashHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    // Wait for the route transition (out-in) before restoring/jumping
+    return new Promise(resolve => {
+      setTimeout(() => {
+        if (savedPosition) resolve(savedPosition);
+        else if (to.hash) resolve({ el: to.hash, top: 0 });
+        else resolve({ top: 0 });
+      }, 320);
+    });
+  },
 });
 
 export default router;

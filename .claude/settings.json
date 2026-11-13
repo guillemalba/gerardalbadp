@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sips -s format jpeg -s formatOptions 80 --resampleWidth 1200 src/assets/images/bio_profile.png --out src/assets/img/bio_profile.jpg)",
+      "Bash(python3 -)",
+      "Bash(git rm *)",
+      "Bash(npx vue-cli-service *)",
+      "Bash(perl -CSD -pi -e \"s/ \\\\|\\\\| '\\\\x{00a0}'//g\" src/components/home/WorkGrid.vue src/views/ProjectView.vue)"
+    ]
+  }
+}

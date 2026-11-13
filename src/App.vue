@@ -1,135 +1,151 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <a class="skip" href="#work" @click.prevent="skipToWork">Skip to work</a>
+  <SiteNav />
+  <router-view v-slot="{ Component, route }">
+    <transition name="cut" mode="out-in">
+      <component :is="Component" :key="route.name" />
+    </transition>
+  </router-view>
+  <div class="grain" aria-hidden="true"></div>
 </template>
 
 <script>
+import SiteNav from './components/SiteNav.vue';
+import { PROJECTS, REEL_ID } from './data/projects';
+import { loadAll } from './data/vimeo';
+
 export default {
   name: 'App',
+  components: { SiteNav },
+  created() {
+    loadAll([REEL_ID, ...PROJECTS.map(p => p.id)]);
+  },
+  methods: {
+    skipToWork() {
+      this.$router.push({ name: 'Home', hash: '#work' });
+    },
+  },
 };
 </script>
 
 <style>
-@font-face {
-  font-family: 'NewYork';
-  src: url('@/assets/fonts/NewYork.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Baskerville';
-  src: url('@/assets/fonts/BASKRV_L.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ---------- Design tokens (design-2) ---------- */
+/* ======================================================
+   design-3 · "Viewfinder"
+   Instrument Serif (display) + Geist Mono (camera HUD)
+   ====================================================== */
 :root {
-  --bg: #050505;
-  --ink: #f3f0ea;
-  --ink-dim: rgba(243, 240, 234, 0.62);
-  --ink-faint: rgba(243, 240, 234, 0.28);
-  --line: rgba(243, 240, 234, 0.18);
-  --accent: #f2d24b;
+  --bg: #0b0b0a;
+  --bg-2: #141413;
+  --ink: #ecebe6;
+  --ink-2: rgba(236, 235, 230, 0.6);
+  --ink-3: rgba(236, 235, 230, 0.32);
+  --line: rgba(236, 235, 230, 0.14);
+  --rec: #ff4d2e;
 
-  --font-display: 'Baskerville', 'Baskerville Old Face', Georgia, serif;
-  --font-text: 'NewYork', 'Baskerville', Georgia, serif;
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
+  --mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
-  --rail: 64px;            /* width of each side rail on desktop */
-  --gutter: clamp(20px, 4vw, 48px);
-  --tap: 44px;             /* minimum interactive size */
-  --radius: 999px;
-  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --t: 0.3s;
+  --edge: clamp(16px, 3.2vw, 44px);
+  --nav-h: 64px;
+  --tap: 44px;
+  --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --ease-io: cubic-bezier(0.7, 0, 0.2, 1);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html, body {
-  margin: 0;
-  padding: 0;
+html {
   background: var(--bg);
   color: var(--ink);
-  scrollbar-color: #303030 #000;
   -webkit-text-size-adjust: 100%;
+  scrollbar-color: #2a2a28 var(--bg);
 }
 
 body {
-  font-family: var(--font-display);
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
-#app { min-height: 100vh; display: flex; flex-direction: column; }
+#app { min-height: 100vh; }
 
-h1, h2, h3, h4, h5, h6, p, span, button, a, li {
-  font-family: var(--font-display);
-  font-weight: 300;
-}
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+h1, h2, h3, p { margin: 0; font-weight: 400; }
 
-h1, h2, h3 { margin: 0; letter-spacing: 0.01em; }
+::selection { background: var(--rec); color: #000; }
+:focus-visible { outline: 1.5px solid var(--rec); outline-offset: 3px; }
 
-button { color: inherit; font: inherit; }
-
-/* Small uppercase label used across the whole site */
-.label {
-  font-family: var(--font-text);
-  font-size: 12px;
-  letter-spacing: 0.28em;
+/* Mono HUD label */
+.hud {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
 }
 
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; }
 
-/* Round icon button: the one circular control of the site */
-.btn-round {
-  width: var(--tap);
-  height: var(--tap);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  color: var(--ink);
-  cursor: pointer;
-  padding: 0;
-  transition: transform var(--t) var(--ease), border-color var(--t), background var(--t), color var(--t);
-}
-.btn-round:active { transform: scale(0.94); }
-
-/* Pill: the one text button of the site */
-.btn-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: var(--tap);
-  padding: 0 26px;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius);
-  background: var(--ink);
-  color: #000;
-  font-family: var(--font-text);
-  font-size: 12px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  cursor: pointer;
+/* Underline that draws on hover */
+.draw {
   text-decoration: none;
-  transition: transform var(--t) var(--ease), background var(--t), color var(--t), border-color var(--t);
+  background: linear-gradient(currentColor, currentColor) left 100% / 0 1px no-repeat;
+  transition: background-size 0.45s var(--ease);
 }
-.btn-pill:active { transform: scale(0.97); }
+@media (hover: hover) { .draw:hover { background-size: 100% 1px; } }
 
-@media (hover: hover) {
-  .btn-round:hover { border-color: var(--accent); color: var(--accent); background: rgba(0, 0, 0, 0.5); }
-  .btn-pill:hover { background: var(--accent); border-color: var(--accent); }
+/* REC dot */
+.rec-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--rec);
+  box-shadow: 0 0 12px rgba(255, 77, 46, 0.7);
+  animation: blink 1.6s steps(1) infinite;
 }
+@keyframes blink { 50% { opacity: 0.15; } }
+
+.skip {
+  position: fixed; left: 12px; top: 12px; z-index: 9999;
+  padding: 10px 14px; background: var(--ink); color: #000;
+  transform: translateY(-200%);
+  font-size: 12px;
+}
+.skip:focus { transform: none; }
+
+/* Film grain overlay: one static noise tile, very low opacity */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 9000;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 0.9s steps(3) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-3%, 2%); }
+  66% { transform: translate(2%, -3%); }
+}
+
+/* Route change: a hard "cut" through black */
+.cut-enter-active { transition: opacity 0.5s var(--ease); }
+.cut-leave-active { transition: opacity 0.25s var(--ease-io); }
+.cut-enter-from, .cut-leave-to { opacity: 0; }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 </style>
