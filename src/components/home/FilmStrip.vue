@@ -1,5 +1,6 @@
 <template>
-  <section class="strip" aria-label="Frames from the work">
+  <section class="strip-wrap" aria-label="Frames from the work">
+    <div class="strip">
     <div class="track">
       <div v-for="copy in 2" :key="copy" class="run" :aria-hidden="copy === 2 ? 'true' : null">
         <router-link
@@ -13,6 +14,7 @@
           <span class="hud code">{{ String(i + 1).padStart(2, '0') }}A</span>
         </router-link>
       </div>
+    </div>
     </div>
   </section>
 </template>
@@ -36,14 +38,19 @@ export default {
 </script>
 
 <style scoped>
+/* clips the tilted strip so its corners never widen the page */
+.strip-wrap {
+  overflow: hidden;
+  padding: 48px 0;
+  margin: 0 0 40px;
+}
 .strip {
   --hole: 14px;
   position: relative;
   padding: 34px 0;
   background: #050505;
   overflow: hidden;
-  transform: rotate(-2deg) scale(1.04);
-  margin: 40px 0 80px;
+  transform: rotate(-2deg) scale(1.06);
 }
 /* sprocket holes, top and bottom */
 .strip::before, .strip::after {
@@ -98,6 +105,6 @@ export default {
 
 @media (prefers-reduced-motion: reduce) {
   .track { animation: none; }
-  .strip { overflow-x: auto; }
+  .strip { overflow-x: auto; transform: none; }
 }
 </style>

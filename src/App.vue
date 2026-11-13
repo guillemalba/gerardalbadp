@@ -55,6 +55,8 @@ export default {
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
+  overflow-x: hidden;
+  overflow-x: clip;
   background: var(--bg);
   color: var(--ink);
   -webkit-text-size-adjust: 100%;
@@ -69,6 +71,8 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  overflow-x: clip;
+  width: 100%;
 }
 
 #app { min-height: 100vh; }
@@ -122,17 +126,18 @@ h1, h2, h3, p { margin: 0; font-weight: 400; }
 /* Film grain overlay: one static noise tile, very low opacity */
 .grain {
   position: fixed;
-  inset: -50%;
+  inset: 0;
   z-index: 9000;
   pointer-events: none;
   opacity: 0.06;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
   animation: grain 0.9s steps(3) infinite;
 }
+/* moves the noise texture, not the layer, so nothing ever leaves the viewport */
 @keyframes grain {
-  0% { transform: translate(0, 0); }
-  33% { transform: translate(-3%, 2%); }
-  66% { transform: translate(2%, -3%); }
+  0% { background-position: 0 0; }
+  33% { background-position: -37px 23px; }
+  66% { background-position: 29px -41px; }
 }
 
 /* Route change: a hard "cut" through black */

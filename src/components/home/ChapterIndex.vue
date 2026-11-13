@@ -126,7 +126,7 @@ export default {
 /* ---------- touch / narrow: every chapter shows its own frame ---------- */
 @media (max-width: 760px), (hover: none) {
   .stage { display: none; }
-  .chapters { min-height: 0; gap: 24px; }
+  .chapters { min-height: 0; gap: 24px; padding-bottom: 24px; }
   .list li.dimmed { opacity: 1; }
   .list li { border: 0; margin-bottom: 10px; }
   .row {

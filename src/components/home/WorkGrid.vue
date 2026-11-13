@@ -51,7 +51,7 @@
       </router-link>
     </transition-group>
 
-    <div class="cursor hud" :class="{ on: cursorOn }" :style="cursorStyle" aria-hidden="true">
+    <div v-if="canHover" class="cursor hud" :class="{ on: cursorOn }" :style="cursorStyle" aria-hidden="true">
       <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>Play
     </div>
   </section>
@@ -280,8 +280,8 @@ sup { font-size: 11px; vertical-align: top; margin-left: 10px; color: var(--ink-
 .grid-leave-to { opacity: 0; }
 
 @media (max-width: 760px) {
-  .work { padding: 72px var(--edge) 80px; }
-  .head { margin-bottom: 24px; }
+  .work { padding: 0 var(--edge) 64px; }
+  .head { margin-bottom: 24px; padding-top: calc(var(--nav-h) + 16px); }
   .filters { flex-wrap: nowrap; overflow-x: auto; margin: 0 calc(var(--edge) * -1); padding: 0 var(--edge); scrollbar-width: none; width: calc(100% + var(--edge) * 2); }
   .filters::-webkit-scrollbar { display: none; }
   .chip { flex: none; }

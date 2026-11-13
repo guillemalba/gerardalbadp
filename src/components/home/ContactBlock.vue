@@ -109,6 +109,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   min-height: 72px;
+  flex-wrap: wrap;
+  gap: 0 24px;
   color: var(--ink-2);
   border-top: 1px solid var(--line);
 }
@@ -117,6 +119,10 @@ export default {
 
 @media (max-width: 900px) {
   .email, .links { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .contact { min-height: 0; }
+  .base { margin-top: 56px; padding-top: 12px; padding-bottom: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
