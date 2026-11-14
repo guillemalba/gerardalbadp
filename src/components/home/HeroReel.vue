@@ -216,7 +216,7 @@ export default {
 .line:nth-child(2) > * { animation-delay: 1.12s; }
 em { font-style: italic; }
 
-@keyframes up { from { transform: translateY(105%); } to { transform: none; } }
+@keyframes up { from { transform: translateY(140%); } to { transform: none; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes settle { from { transform: translate(-50%, -50%) scale(1.12); } to { transform: translate(-50%, -50%) scale(1); } }
 
