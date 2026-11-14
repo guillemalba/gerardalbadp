@@ -176,7 +176,8 @@ export default {
 /* ---------- viewfinder HUD ---------- */
 .hud-layer {
   position: absolute;
-  inset: calc(var(--bar) + 18px) var(--edge);
+  --hud: clamp(12px, 1.4vw, 20px); /* same inset on all four sides, hugging the frame */
+  inset: calc(var(--bar) + var(--hud)) var(--hud);
   z-index: 2;
   animation: fade 1s var(--ease) 1.4s both;
 }
@@ -224,9 +225,12 @@ em { font-style: italic; }
 
 @media (max-width: 760px) {
   .hero { --bar: 13svh; }
+  .hud-layer { inset: calc(var(--bar) + 18px) var(--edge); }
   .hud-tr, .bl, .br, .role { display: none; }
   .hud-tl { left: 30px; }
   .play-reel { margin-left: auto; margin-right: auto; }
   .title { font-size: clamp(64px, 24vw, 140px); flex-direction: column; bottom: calc(var(--bar) + 8px); }
+  /* the italic "A" overhangs to the left; nudge it so its foot lines up under the "G" */
+  .line:nth-child(2) em { margin-left: 0.1em; }
 }
 </style>
