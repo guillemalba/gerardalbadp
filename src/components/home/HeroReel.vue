@@ -198,7 +198,7 @@ export default {
 .title {
   position: absolute;
   z-index: 4;
-  left: var(--edge);
+  left: calc(var(--edge) - 0.04em); /* optical: cancels the "G" side bearing */
   right: var(--edge);
   bottom: calc(var(--bar) + 8px);
   font-size: clamp(64px, 15.5vw, 260px);

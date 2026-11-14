@@ -85,7 +85,8 @@ export default {
 .brand-name { font-size: 26px; line-height: 1; }
 .brand-role { color: var(--ink-2); }
 
-ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 4px; }
+/* margin-right cancels the links' 10px side padding so "Contact" lines up with the page edge */
+ul { list-style: none; margin: 0 -10px 0 0; padding: 0; display: flex; gap: 4px; }
 
 .link {
   display: inline-flex;
