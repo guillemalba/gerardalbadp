@@ -200,7 +200,7 @@ export default {
   z-index: 4;
   left: var(--edge);
   right: var(--edge);
-  bottom: calc(min(var(--bar), 96px) + 4px);
+  bottom: calc(var(--bar) + 8px);
   font-size: clamp(64px, 15.5vw, 260px);
   line-height: 0.82;
   display: flex;
@@ -210,7 +210,9 @@ export default {
   mix-blend-mode: difference;
   color: #fff;
 }
-.line { display: block; overflow: hidden; padding-bottom: 0.06em; }
+/* The mask is padded (and pulled back with negative margins) so glyph tails and
+   italic overhangs aren't clipped, without moving the title. */
+.line { display: block; overflow: hidden; padding: 0.12em 0.1em 0.18em; margin: -0.12em -0.1em -0.12em; }
 .line > * { display: block; animation: up 1.3s var(--ease) both; }
 .line:nth-child(1) > * { animation-delay: 1s; }
 .line:nth-child(2) > * { animation-delay: 1.12s; }
